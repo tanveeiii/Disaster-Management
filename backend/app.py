@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify, send_file
-from backend.analysis_utils import run_full_analysis
+from analysis_utils import run_full_analysis
 import os
+import io
+import base64
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -60,6 +62,12 @@ def analyze():
 
         df = result["df_filtered_final"]
 
+        fig = result["figure"]
+        buf = io.BytesIO()
+        fig.savefig(buf, format='png', bbox_inches='tight')
+        buf.seek(0)
+        image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+
         # Convert fault table (only few rows)
         fault_preview = []
         if "fault_table" in result:
@@ -89,7 +97,8 @@ def analyze():
             "fault_preview": fault_preview,
 
             # Download link
-            "download_excel": "http://127.0.0.1:5000/download-excel"
+            "download_excel": "http://127.0.0.1:5000/download-excel",
+            "graph": image_base64
         })
 
     except Exception as e:
@@ -98,11 +107,6 @@ def analyze():
             "message": str(e)
         })
 
-@app.route("/download-excel", methods=["GET"])
-def download_excel():
-    return send_file(OUTPUT_PATH, as_attachment=True)
-
-#  Download Excel
 @app.route("/download-excel", methods=["GET"])
 def download_excel():
     return send_file(OUTPUT_PATH, as_attachment=True)

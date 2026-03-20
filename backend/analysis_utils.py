@@ -12,7 +12,7 @@ import geopandas as gpd
 from shapely.geometry import LineString
 from openpyxl.styles import Border, Side
 
-
+plt.switch_backend('Agg')
 # ---------------------------------------------------------------------
 # Basic utilities
 # ---------------------------------------------------------------------
