@@ -1,0 +1,9 @@
+flask
+pandas
+numpy
+matplotlib
+scipy
+geopy
+geopandas
+shapely
+openpyxl
