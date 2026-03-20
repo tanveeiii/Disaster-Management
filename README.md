@@ -86,7 +86,7 @@ python app.py
 ### 7. Navigate to frontend
 
 ```bash
-cd ../frontend
+cd ../frontend1
 ```
 ### 8. Install dependencies
 
@@ -97,3 +97,8 @@ npm install
 ```bash
 npm run dev
 ```
+
+## Running the software
+
+For testing purposes the dataset has already been uploaded. Just input the coordinates of the target location and run analysis.
+The result of the analysis will be displayed along with the graph and option to download the result in form of excel sheet.
