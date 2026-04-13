@@ -480,7 +480,7 @@ def compute_fault_metrics(gdf_eq: gpd.GeoDataFrame, gdf_faults: gpd.GeoDataFrame
         np.sin(lon1) * np.sin(lon2) +
         np.cos(lon1) * np.cos(lon2) * np.cos(lat2 - lat1)
     )
-    gdf_faults["Fault_Length_km"] = dist_km
+    gdf_faults["Total Length"] = dist_km
 
     gdf_faults["buffer_geom"] = gdf_faults.geometry.buffer(buffer_km * 1000)
 
@@ -492,10 +492,10 @@ def compute_fault_metrics(gdf_eq: gpd.GeoDataFrame, gdf_faults: gpd.GeoDataFrame
     gdf_faults["Num_Earthquakes"] = counts
 
     gdf_faults["Active_Length_km"] = gdf_faults.apply(
-        lambda r: r["Fault_Length_km"] if r["Num_Earthquakes"] > 0 else 0,
+        lambda r: r["Total Length"] if r["Num_Earthquakes"] > 0 else 0,
         axis=1
     )
-
+    gdf_faults["Max Mw"] = 5.06 + np.log10(dist_km) * 1.16
     gdf_faults["Wm"] = gdf_faults["Num_Earthquakes"] / 214
 
     total_active_length = gdf_faults["Active_Length_km"].sum()
@@ -507,386 +507,418 @@ def compute_fault_metrics(gdf_eq: gpd.GeoDataFrame, gdf_faults: gpd.GeoDataFrame
     return gdf_faults
 
 
-# ---------------------------------------------------------------------
-# Fault-table calculation
-# ---------------------------------------------------------------------
+import numpy as np
+import pandas as pd
+from scipy.stats import norm
+from scipy.optimize import curve_fit
+from openpyxl.styles import Border, Side
+import matplotlib.pyplot as plt
 
-def get_fault_row_by_abbr(gdf_faults: pd.DataFrame, abbr: str) -> pd.Series:
-    fault_data = gdf_faults[gdf_faults["Abbreviation"] == abbr]
-    if fault_data.empty:
-        raise ValueError(f"Fault abbreviation '{abbr}' not found.")
-    return fault_data.iloc[0]
+Sln = 0.4648
 
 
-def calculate_fault_table(
-    fault_row: pd.Series,
-    b: float,
-    x_coord: float,
-    y_coord: float,
-    x_inter: float,
-    y_inter: float,
-    z: float = 0.01,
-    Sln: float = 0.4648,
-    m0: float = 4.0
-):
-    """
-    Recreates your fault table exactly in a reusable function.
-    Returns:
-      fault_table, context_dict
-    """
-    start_x = float(fault_row["LAT 1"])
-    start_y = float(fault_row["LONG 1"])
-    end_x = float(fault_row["LAT 2"])
-    end_y = float(fault_row["LONG 2"])
-    length = float(fault_row["Total Length"])
-    alpha = float(fault_row["revised_alpha"])
-    mw_max = float(fault_row["Max Mw"])
+# ── Geometry helpers ───────────────────────────────────────────────────────────
+def get_intersection(x_coord, y_coord, coords):
+    best_point = None
+    best_dist  = np.inf
+    for i in range(len(coords) - 1):
+        lat1, lon1 = coords[i]
+        lat2, lon2 = coords[i + 1]
+        dx = lat2 - lat1
+        dy = lon2 - lon1
+        if dx == 0 and dy == 0:
+            continue
+        t  = ((x_coord - lat1) * dx + (y_coord - lon1) * dy) / (dx**2 + dy**2)
+        t  = max(0.0, min(1.0, t))
+        xi = lat1 + t * dx
+        yi = lon1 + t * dy
+        dist = np.sqrt((x_coord - xi)**2 + (y_coord - yi)**2)
+        if dist < best_dist:
+            best_dist  = dist
+            best_point = (xi, yi)
+    return best_point
 
-    max_rj = 6378.8 * np.arccos(
-        np.sin(x_coord * np.pi / 180) * np.sin(start_x * np.pi / 180) +
-        np.cos(x_coord * np.pi / 180) * np.cos(start_x * np.pi / 180) * np.cos((start_y - y_coord) * np.pi / 180)
-    )
-    min_rj = 6378.8 * np.arccos(
-        np.sin(x_coord * np.pi / 180) * np.sin(end_x * np.pi / 180) +
-        np.cos(x_coord * np.pi / 180) * np.cos(end_x * np.pi / 180) * np.cos((end_y - y_coord) * np.pi / 180)
-    )
 
+def fault_coords_from_row(fault_row):
+    geom = fault_row.get("geometry", None)
+    if geom is not None and hasattr(geom, "coords"):
+        return [(lat, lon) for lon, lat in geom.coords]
+    coords = []
+    i = 1
+    while f"LAT {i}" in fault_row.index and pd.notna(fault_row.get(f"LAT {i}")):
+        coords.append((fault_row[f"LAT {i}"], fault_row[f"LONG {i}"]))
+        i += 1
+    return coords
+
+
+# ── Core per-fault calculation ─────────────────────────────────────────────────
+def calculate_fault(fault_row, x_inter, y_inter, z, x_coord, y_coord, b):
+    start_x = fault_row["LAT 1"]
+    start_y = fault_row["LONG 1"]
+    end_x   = fault_row["LAT 2"]
+    end_y   = fault_row["LONG 2"]
+    length  = fault_row["Total Length"]
+    alpha   = fault_row["revised_alpha"]
+    mw_max  = fault_row["Max Mw"]
+    m0      = 4
+    mag_df  = (mw_max - m0) / 10
+
+    def haversine(lat1, lon1, lat2, lon2):
+        cos_term = (
+            np.sin(lat1 * np.pi / 180) * np.sin(lat2 * np.pi / 180)
+            + np.cos(lat1 * np.pi / 180) * np.cos(lat2 * np.pi / 180)
+            * np.cos((lon2 - lon1) * np.pi / 180)
+        )
+        return 6378.8 * np.arccos(np.clip(cos_term, -1.0, 1.0))
+
+    max_rj = haversine(x_coord, y_coord, start_x, start_y)
+    min_rj = haversine(x_coord, y_coord, end_x,   end_y)
     rad_df = (max_rj - min_rj) / 10
-    d = 6378.8 * np.arccos(
-        np.sin(x_coord * np.pi / 180) * np.sin(x_inter * np.pi / 180) +
-        np.cos(x_coord * np.pi / 180) * np.cos(x_inter * np.pi / 180) * np.cos((y_inter - y_coord) * np.pi / 180)
-    )
-    l0 = 6378.8 * np.arccos(
-        np.sin(end_x * np.pi / 180) * np.sin(x_inter * np.pi / 180) +
-        np.cos(end_x * np.pi / 180) * np.cos(x_inter * np.pi / 180) * np.cos((y_inter - end_y) * np.pi / 180)
-    )
+    d      = haversine(x_coord, y_coord, x_inter, y_inter)
+    l0     = haversine(end_x, end_y, x_inter, y_inter)
 
-    mag_df = (mw_max - m0) / 10
-
-    rj_values = [max_rj - k * rad_df for k in range(11)]
-    table = []
-    ln_z = np.log(z)
+    ln_z      = np.log(z)
+    rj_values = [min_rj + k * rad_df for k in range(11)]
+    table     = []
 
     for i in range(11):
-        m0_curr = m0 + mag_df * i
-
+        m0_curr   = m0 + mag_df * i
         N1 = alpha * (
-            (10 ** (-b * (m0_curr - mag_df / 2 - m0))) -
-            (10 ** (-b * (mw_max - m0))) / (1 - 10 ** (-b * (mw_max - m0)))
+            (10 ** (-b * (m0_curr - mag_df / 2 - m0)))
+            - (10 ** (-b * (mw_max - m0))) / (1 - 10 ** (-b * (mw_max - m0)))
         )
         N2 = alpha * (
-            (10 ** (-b * (m0_curr + mag_df / 2 - m0))) -
-            (10 ** (-b * (mw_max - m0))) / (1 - 10 ** (-b * (mw_max - m0)))
+            (10 ** (-b * (m0_curr + mag_df / 2 - m0)))
+            - (10 ** (-b * (mw_max - m0))) / (1 - 10 ** (-b * (mw_max - m0)))
         )
         lambda_mi = N1 - N2
-
         Xmi = min(10 ** (-2.44 + 0.59 * m0_curr), length)
 
         row = {
-            ("", "mi"): round(m0_curr, 3),
+            ("", "mi"):            round(m0_curr, 3),
             ("", "N(m>mi-Δm/2)"): N1,
             ("", "N(m>mi+Δm/2)"): N2,
-            ("", "λ(mi)"): lambda_mi,
-            ("", "Xmi"): Xmi,
+            ("", "λ(mi)"):        lambda_mi,
+            ("", "Xmi"):          Xmi,
         }
-
-        grouped_results = {
-            "P(R<rj+Δr/2 | mi)": {},
-            "P(R=rj | mi)": {},
-            "E[ln(Z)]": {},
-            "U": {},
-            "F'(U)": {},
-            "P(Z>z | mi)": {},
-            "µ(z)": {},
-        }
-
+        grouped = {k: {} for k in [
+            "P(R<rj+Δr/2 | mi)", "P(R=rj | mi)", "E[ln(Z)]",
+            "U", "F'(U)", "P(Z>z | mi)", "µ(z)"
+        ]}
         prev_p_less = 0
 
         for j in rj_values:
-            rj_label = f"rj = {round(j, 2)}"
-
-            if j < np.sqrt(d * d + l0 * l0):
+            lbl = f"rj = {round(j, 2)}"
+            if j < np.sqrt(d**2 + l0**2):
                 p_less = 0
-            elif j < np.sqrt(d * d + (length + l0 - Xmi) ** 2):
-                p_less = (np.sqrt(j * j - d * d) - l0) / (length - Xmi)
+            elif j < np.sqrt(d**2 + (length + l0 - Xmi) ** 2):
+                p_less = (np.sqrt(j**2 - d**2) - l0) / (length - Xmi)
             else:
                 p_less = 1
-
-            grouped_results["P(R<rj+Δr/2 | mi)"][rj_label] = p_less
+            grouped["P(R<rj+Δr/2 | mi)"][lbl] = p_less
 
             p_eq = p_less - prev_p_less
-            grouped_results["P(R=rj | mi)"][rj_label] = p_eq
+            grouped["P(R=rj | mi)"][lbl] = p_eq
             prev_p_less = p_less
 
-            term1 = -3.7671 + 1.2303 * m0_curr - 0.0019 * (m0_curr ** 2) - 0.0027 * j
-            term2 = 1.4857 * np.log(j + 0.0385 * np.exp(0.8975 * m0_curr))
-            term3 = 0.1301 * np.log10(j) * max(np.log(j / 100), 0)
-            e_ln_z = term1 - term2 + term3 + 0.394
-            grouped_results["E[ln(Z)]"][rj_label] = e_ln_z
+            t1     = -3.7671 + 1.2303 * m0_curr - 0.0019 * m0_curr**2 - 0.0027 * j
+            t2     = 1.4857 * np.log(j + 0.0385 * np.exp(0.8975 * m0_curr))
+            t3     = 0.1301 * np.log10(j) * max(np.log(j / 100), 0)
+            e_ln_z = t1 - t2 + t3 + 0.394
+            grouped["E[ln(Z)]"][lbl] = e_ln_z
 
-            u_val = (ln_z - e_ln_z) / Sln
-            grouped_results["U"][rj_label] = u_val
+            u_val     = (ln_z - e_ln_z) / Sln
+            grouped["U"][lbl] = u_val
 
-            f_u = norm.cdf(u_val)
-            f_3 = norm.cdf(-3)
+            f_u       = norm.cdf(u_val)
+            f_3       = norm.cdf(-3)
             f_prime_u = (f_u - f_3) / (1 - 2 * f_3)
-            grouped_results["F'(U)"][rj_label] = f_prime_u
+            grouped["F'(U)"][lbl] = f_prime_u
 
             p_z_gt_z = max(1 - f_prime_u, 0)
-            grouped_results["P(Z>z | mi)"][rj_label] = p_z_gt_z
+            grouped["P(Z>z | mi)"][lbl] = p_z_gt_z
+            grouped["µ(z)"][lbl]        = lambda_mi * p_eq * p_z_gt_z
 
-            mu_z = lambda_mi * p_eq * p_z_gt_z
-            grouped_results["µ(z)"][rj_label] = mu_z
-
-        for metric in grouped_results:
-            for rj_label, val in grouped_results[metric].items():
-                row[(metric, rj_label)] = val
-
+        for metric, vals in grouped.items():
+            for lbl, val in vals.items():
+                row[(metric, lbl)] = val
         table.append(row)
 
-    fault_table = pd.DataFrame(table)
-    fault_table.columns = pd.MultiIndex.from_tuples(fault_table.columns)
-
-    context = {
-        "start_x": start_x,
-        "start_y": start_y,
-        "end_x": end_x,
-        "end_y": end_y,
-        "length": length,
-        "max_rj": max_rj,
-        "min_rj": min_rj,
-        "rad_df": rad_df,
-        "d": d,
-        "l0": l0,
-        "alpha": alpha,
-        "m0": m0,
-        "mw_max": mw_max,
-        "mag_df": mag_df,
-        "z": z,
+    df = pd.DataFrame(table)
+    df.columns = pd.MultiIndex.from_tuples(df.columns)
+    return df, {
+        "start_x": start_x, "start_y": start_y,
+        "end_x":   end_x,   "end_y":   end_y,
+        "x_inter": x_inter, "y_inter": y_inter,
+        "length":  length,  "max_rj":  max_rj,
+        "min_rj":  min_rj,  "rad_df":  rad_df,
+        "d":       d,       "l0":      l0,
+        "alpha":   alpha,   "m0":      m0,
+        "mw_max":  mw_max,  "mag_df":  mag_df,
     }
 
-    return fault_table, context
 
-
-def create_fault_header(fault_name: str, context: dict) -> pd.DataFrame:
-    header = [
+# ── Excel helpers ──────────────────────────────────────────────────────────────
+def make_header_df(fault_name, p):
+    rows = [
         [fault_name, "", "", "", ""],
-
-        ["Starting Point", "Latitude", context["start_x"], "Longitude", context["start_y"]],
-        ["End Point", "Latitude", context["end_x"], "Longitude", context["end_y"]],
-        ["Intersection Point", "Latitude", context.get("x_inter"), "Longitude", context.get("y_inter")],
-
+        ["Starting Point",     "Latitude",  p["start_x"], "Longitude", p["start_y"]],
+        ["End Point",          "Latitude",  p["end_x"],   "Longitude", p["end_y"]],
+        ["Intersection Point", "Latitude",  p["x_inter"], "Longitude", p["y_inter"]],
         ["", "", "", "", ""],
-
-        ["Length", context["length"], "km", "", ""],
-        ["Max rj", context["max_rj"], "km", "Radius Dif", context["rad_df"]],
-        ["Min rj", context["min_rj"], "km", "", ""],
-        ["d", context["d"], "km", "", ""],
-        ["Lo", context["l0"], "km", "", ""],
-
+        ["Length",  p["length"],  "km", "",           ""],
+        ["Max rj",  p["max_rj"],  "km", "Radius Dif", p["rad_df"]],
+        ["Min rj",  p["min_rj"],  "km", "",           ""],
+        ["d",       p["d"],       "km", "",           ""],
+        ["Lo",      p["l0"],      "km", "",           ""],
         ["", "", "", "", ""],
-
-        ["Alpha", context["alpha"], "", "", ""],
-        ["Mo", context["m0"], "", "", ""],
-        ["Mw max", context["mw_max"], "", "Mag Dif", context["mag_df"]],
+        ["Alpha",   p["alpha"],   "",   "",           ""],
+        ["Mo",      p["m0"],      "",   "",           ""],
+        ["Mw max",  p["mw_max"],  "",   "Mag Dif",    p["mag_df"]],
     ]
+    return pd.DataFrame(rows)
 
-    return pd.DataFrame(header)
 
-
-def export_fault_excel(
-    fault_name: str,
-    fault_table: pd.DataFrame,
-    context: dict,
-    output_path: str,
-    z: float = 0.01
-):
-    """
-    Writes the fault header + fault table to Excel with the same border styling logic.
-    """
-    writer = pd.ExcelWriter(output_path, engine="openpyxl")
-    sheet = f"{z}g"
-    current_row = 0
-
-    header_df = create_fault_header(fault_name, context)
-    header_df.to_excel(
-        writer,
-        sheet_name=sheet,
-        startrow=current_row,
-        index=False,
-        header=False
-    )
-
-    ws = writer.sheets[sheet]
-
-    # Merge the title row
-    ws.merge_cells(
-        start_row=current_row + 1,
-        start_column=1,
-        end_row=current_row + 1,
-        end_column=5
-    )
-
-    current_row += len(header_df) + 2
-
-    fault_table.to_excel(
-        writer,
-        sheet_name=sheet,
-        startrow=current_row,
-        merge_cells=True
-    )
-
-    blank_row_idx = current_row + fault_table.columns.nlevels + 1
-    ws.delete_rows(blank_row_idx)
-
-    right_line = Side(style="medium")
-    ll0 = fault_table.columns.get_level_values(0)
-
+def apply_borders(ws, fault_table, current_row):
+    right_line  = Side(style="medium")
+    bottom_line = Side(style="medium")
+    ll0      = fault_table.columns.get_level_values(0)
     end_cols = [i + 2 for i in range(len(ll0) - 1) if ll0[i] != ll0[i + 1]] + [len(ll0) + 1]
     last_row = current_row + fault_table.columns.nlevels + len(fault_table)
-
     for c in end_cols:
         for r in range(current_row + 1, last_row + 1):
             cell = ws.cell(row=r, column=c)
-            cell.border = Border(
-                right=right_line,
-                left=cell.border.left,
-                top=cell.border.top,
-                bottom=cell.border.bottom
-            )
-
-    bottom_line = Side(style="medium")
-    total_cols = len(ll0) + 1
-
-    for c in range(1, total_cols + 1):
+            cell.border = Border(right=right_line, left=cell.border.left,
+                                 top=cell.border.top, bottom=cell.border.bottom)
+    for c in range(1, len(ll0) + 2):
         cell = ws.cell(row=last_row, column=c)
-        cell.border = Border(
-            bottom=bottom_line,
-            top=cell.border.top,
-            left=cell.border.left,
-            right=cell.border.right
+        cell.border = Border(bottom=bottom_line, top=cell.border.top,
+                             left=cell.border.left, right=cell.border.right)
+    return last_row
+
+
+def power_law(x, a, b_fit):
+    return a * np.power(x, b_fit)
+
+#############
+def load_faults_from_eq_sheet(excel_path: str, sheet_name: str = "FAULTS") -> gpd.GeoDataFrame:
+    faults_df = pd.read_excel(excel_path, sheet_name=sheet_name, header=1)
+    faults_df.columns = faults_df.columns.astype(str).str.strip()
+
+    faults_df = faults_df[faults_df["Type of Fault"].notna()].copy()
+
+    coord_cols = ["LONG 1", "LAT 1", "LONG 2", "LAT 2"]
+    for col in coord_cols:
+        faults_df[col] = pd.to_numeric(faults_df[col], errors="coerce")
+    faults_df = faults_df.dropna(subset=coord_cols).copy()
+
+    fault_lines = []
+    for _, row in faults_df.iterrows():
+        fault_lines.append(
+            LineString([
+                (row["LONG 1"], row["LAT 1"]),
+                (row["LONG 2"], row["LAT 2"])
+            ])
         )
 
-    writer.close()
+    gdf_faults = gpd.GeoDataFrame(
+        faults_df,
+        geometry=fault_lines,
+        crs="EPSG:4326"
+    )
 
+    return gdf_faults.reset_index(drop=True)
 
-# ---------------------------------------------------------------------
-# Full pipeline helper for Flask
-# ---------------------------------------------------------------------
+###########
 
+# ── Flask pipeline ─────────────────────────────────────────────────────────────
 def run_full_analysis(
     excel_path: str,
     center_lat: float,
     center_long: float,
     dist_km: float = 300,
     decluster_dist_km: float = 50,
-    fault_buffer_km: float = 15, # New parameter: how far from the fault to look for EQs
+    fault_buffer_km: float = 15,
     start_year: int = 2020,
-    fault_abbr: str | None = None,
-    x_coord: float | None = None,
-    y_coord: float | None = None,
-    x_inter: float | None = None,
-    y_inter: float | None = None,
-    z: float = 0.01,
-    fault_output_path: str | None = None
+    x_coord: float = None,
+    y_coord: float = None,
+    psha_output_path: str = None,   # Excel path for full PSHA export; None = skip writing
 ):
-    # 1. Load and deduplicate raw earthquake data
+    # 1. Load and deduplicate
     compiled_df = preprocess_compiled_sheet(excel_path, "Compiled")
-    df_nodup = deduplicate_events(compiled_df)
-    
-# 1. Build Earthquakes GeoDataFrame (using your existing logic, just split out)
+    df_nodup    = deduplicate_events(compiled_df)
+
     gdf_eq_all = gpd.GeoDataFrame(
         df_nodup.copy(),
         geometry=gpd.points_from_xy(df_nodup.longitude, df_nodup.latitude),
         crs="EPSG:4326"
     )
-    
-    # 2. Build Faults GeoDataFrame directly from the combined CSV
-    gdf_faults_all = load_and_build_faults_from_combined("India_Faults_Combined.xlsx - All Faults Combined.csv")
-    
-    # 3. Filter the grouped faults by the user's radius (from our previous update)
+
+    # 2. Build and filter faults
+    gdf_faults_all   = load_and_build_faults_from_combined(
+        "India_Faults_Combined.csv"
+    )
     gdf_faults_local = filter_faults_by_radius(
-        gdf_faults_all, 
-        center_lat, 
-        center_long, 
-        dist_km
+        gdf_faults_all, center_lat, center_long, dist_km
     )
+
     if gdf_faults_local.empty:
-        raise ValueError(f"No faults found within {dist_km}km of the specified location.")
-        
-    # 5. NEW LOGIC: Filter earthquakes to only those associated with the local faults
+        raise ValueError(f"No faults found within {dist_km} km of the specified location.")
+
+    # 3. Filter earthquakes by faults and decluster
     df_filtered_final = filter_earthquakes_by_faults(
-        gdf_eq_all, 
-        gdf_faults_local, 
-        buffer_km=fault_buffer_km
+        gdf_eq_all, gdf_faults_local, buffer_km=fault_buffer_km
     )
-    
-    # (Optional) You can still apply your declustering to this final set if desired
+    if df_filtered_final.empty:
+        raise ValueError("No earthquakes found within the selected fault buffer.")
     declustered_df = decluster(df_filtered_final, dist_km=decluster_dist_km)
 
-    # 6. Run Completeness and Gutenberg-Richter A-B values on the strictly local, fault-associated data
-    ab_results = compute_ab_psha(df_filtered_final, start_year=start_year)
+    # 4. G-R analysis and completeness
+    ab_results      = compute_ab_psha(df_filtered_final, start_year=start_year)
     completeness_df = compute_completeness_analysis(df_filtered_final, end_year=start_year)
 
+    # 5. Fault metrics
+    gdf_eq_local = gpd.GeoDataFrame(
+        df_filtered_final.copy(),
+        geometry=gpd.points_from_xy(df_filtered_final.longitude, df_filtered_final.latitude),
+        crs="EPSG:4326"
+    )
+    # gdf_faults_metrics = compute_fault_metrics(gdf_eq_local, gdf_faults_local)
+    # usage
+    gdf_faults_metrics = compute_fault_metrics(
+    gdf_eq_local, gdf_faults_local, buffer_km=fault_buffer_km
+    )
     outputs = {
-        "compiled_df": compiled_df,
-        "df_nodup": df_nodup,
-        "declustered_df": declustered_df,
+        "compiled_df":       compiled_df,
+        "df_nodup":          df_nodup,
+        "declustered_df":    declustered_df,
         "df_filtered_final": df_filtered_final,
-        "local_faults": gdf_faults_local, # Added the filtered faults to the output
-        "yearly_mag_df": ab_results["yearly_mag_df"],
-        "cum_df": ab_results["cum_df"],
-        "ab_df": ab_results["ab_df"],
-        "a": ab_results["a"],
-        "b": ab_results["b"],
-        "r2": ab_results["r2"],
-        "figure": ab_results["figure"],
-        "completeness_df": completeness_df,
+        "local_faults":      gdf_faults_local,
+        "gdf_faults":        gdf_faults_metrics,
+        "yearly_mag_df":     ab_results["yearly_mag_df"],
+        "cum_df":            ab_results["cum_df"],
+        "ab_df":             ab_results["ab_df"],
+        "a":                 ab_results["a"],
+        "b":                 ab_results["b"],
+        "r2":                ab_results["r2"],
+        "figure":            ab_results["figure"],
+        "completeness_df":   completeness_df,
     }
-    if fault_abbr is not None:
-        if None in (x_coord, y_coord, x_inter, y_inter):
-            raise ValueError("x_coord, y_coord, x_inter, and y_inter are required for fault-table calculation.")
 
-        # Rebuild GeoDataFrame for earthquakes using ONLY the final filtered local data
-        gdf_eq_local = gpd.GeoDataFrame(
-            df_filtered_final.copy(),
-            geometry=gpd.points_from_xy(df_filtered_final.longitude, df_filtered_final.latitude),
-            crs="EPSG:4326"
-        )
-        
-        # Calculate fault metrics (Length, Alpha, etc.) using ONLY the local faults and local earthquakes
-        gdf_faults_metrics = compute_fault_metrics(gdf_eq_local, gdf_faults_local)
+    # 6. Full PSHA — all faults × all z values (0.01 → 0.36)
+    if x_coord is None or y_coord is None:
+        raise ValueError("x_coord and y_coord are required for PSHA analysis.")
 
-        fault_row = get_fault_row_by_abbr(gdf_faults_metrics, fault_abbr)
-        
-        fault_table, context = calculate_fault_table(
-            fault_row=fault_row,
-            b=ab_results["b"],
-            x_coord=x_coord,
-            y_coord=y_coord,
-            x_inter=x_inter,
-            y_inter=y_inter,
-            z=z
-        )
+    b        = ab_results["b"]
+    z_values = np.round(np.arange(0.01, 0.37, 0.01), 2)
+    mu_per_z = []
+    writer   = pd.ExcelWriter(psha_output_path, engine="openpyxl") if psha_output_path else None
 
-        context["x_inter"] = x_inter
-        context["y_inter"] = y_inter
+    for z in z_values:
+        sheet_name  = f"{round(z, 2)}g"
+        current_row = 0
+        total_mu    = 0.0
 
-        # Note: 'faults_df' is no longer needed since we use 'gdf_faults_local'
-        outputs["gdf_faults"] = gdf_faults_metrics
-        outputs["fault_row"] = fault_row
-        outputs["fault_table"] = fault_table
-        outputs["fault_context"] = context
+        for _, fault_row in gdf_faults_metrics.iterrows():
+            if fault_row["revised_alpha"] == 0:
+                continue
+            if (
+                pd.isna(fault_row.get("LAT 1")) or
+                pd.isna(fault_row.get("LONG 1")) or
+                pd.isna(fault_row.get("LAT 2")) or
+                pd.isna(fault_row.get("LONG 2"))
+            ):
+                continue
+            coords = [
+                (float(fault_row["LAT 1"]), float(fault_row["LONG 1"])),
+                (float(fault_row["LAT 2"]), float(fault_row["LONG 2"])),
+            ]
+            x_inter, y_inter = get_intersection(x_coord, y_coord, coords)
 
-        if fault_output_path is not None:
-            fault_name = str(fault_row.get("NAME OF FAULT (IF ANY)", fault_abbr))
-            export_fault_excel(
-                fault_name=fault_name,
-                fault_table=fault_table,
-                context=context,
-                output_path=fault_output_path,
-                z=z
+            fault_name  = fault_row.get("NAME OF FAULT (IF ANY)", "Unknown")
+            fault_table, params = calculate_fault(
+                fault_row, x_inter, y_inter, z, x_coord, y_coord, b
             )
-            outputs["fault_output_path"] = fault_output_path
+
+            mu_cols   = [c for c in fault_table.columns if c[0] == "µ(z)"]
+            total_mu += fault_table[mu_cols].values.sum()
+
+            if writer is not None:
+                header_df = make_header_df(fault_name, params)
+                header_df.to_excel(writer, sheet_name=sheet_name,
+                                   startrow=current_row, index=False, header=False)
+                ws = writer.sheets[sheet_name]
+                ws.merge_cells(start_row=current_row + 1, start_column=1,
+                               end_row=current_row + 1, end_column=5)
+                current_row += len(header_df) + 2
+                fault_table.to_excel(writer, sheet_name=sheet_name,
+                                     startrow=current_row, merge_cells=True)
+                ws.delete_rows(current_row + fault_table.columns.nlevels + 1)
+                last_row    = apply_borders(ws, fault_table, current_row)
+                current_row = last_row + 5
+
+        mu_per_z.append(total_mu)
+
+    if writer is not None:
+        writer.close()
+        print(f"Excel written → {psha_output_path}")
+
+    # ── Summary DataFrame ──────────────────────────────────────────────────────
+    summary_df = pd.DataFrame({
+        "PGA (g)":       z_values,
+        "Ln(Z)":         np.log(z_values),
+        "Total µ(z)":    mu_per_z,
+        "Return Period": 1 / np.array(mu_per_z)
+    })
+    print(summary_df.to_string(index=False))
+
+    # ── Power Law Fit ──────────────────────────────────────────────────────────
+    popt, _ = curve_fit(power_law, z_values, mu_per_z, p0=[1e-6, -2.5], maxfev=10000)
+    a_fit, b_fit = popt
+    z_fit  = np.linspace(z_values[0], z_values[-1], 300)
+    mu_fit = power_law(z_fit, a_fit, b_fit)
+
+    # ── Hazard Curve ───────────────────────────────────────────────────────────
+    fig, ax = plt.subplots(figsize=(7, 5))
+    ax.plot(summary_df["PGA (g)"], summary_df["Total µ(z)"],
+            color="steelblue", linewidth=2, label="Series1")
+    ax.plot(z_fit, mu_fit, color="black", linewidth=1,
+            label=f"Power (Series1):  y = {a_fit:.0e}x$^{{{b_fit:.3f}}}$")
+    ax.set_yscale("log")
+    ax.set_xlim(0, 0.4)
+    ax.set_xlabel("PGA (g)")
+    ax.set_ylabel("Mean Annual Rate of Exceedance")
+    ax.set_title("Seismic Hazard Curve for Western\nCentral India (NDMA)")
+    ax.legend()
+    ax.grid(True, which="both", linestyle="--", alpha=0.5)
+    plt.tight_layout()
+
+    # ── MARE Table ─────────────────────────────────────────────────────────────
+    scenarios = [
+        ("Total µ(z) for 10% probability of exceedance in 50 year",    0.10,  50),
+        ("Total µ(z) for 10% probability of exceedance in 100 year",   0.10, 100),
+        ("Total µ(z) for 10% probability of exceedance in 500 year",   0.10, 500),
+        ("Total µ(z) for 10% probability of exceedance in 1000 year",  0.10, 1000),
+        ("Total µ(z) for 2% probability of exceedance in 50 year",     0.02,  50),
+        ("Total µ(z) for 2% probability of exceedance in 100 year",    0.02, 100),
+        ("Total µ(z) for 2% probability of exceedance in 500 year",    0.02, 500),
+        ("Total µ(z) for 2% probability of exceedance in 1000 year",   0.02, 1000),
+    ]
+    mare_rows = []
+    for label, P, t in scenarios:
+        lam = -np.log(1 - P) / t
+        pga = (lam / a_fit) ** (1 / b_fit)
+        mare_rows.append({
+            "Scenario":                       label,
+            "Mean Annual Rate of Exceedance": lam,
+            "PGA (g)":                        round(pga, 3)
+        })
+    mare_df = pd.DataFrame(mare_rows)
+
+    outputs["psha_summary_df"] = summary_df
+    outputs["psha_mare_df"]    = mare_df
+    outputs["psha_a_fit"]      = a_fit
+    outputs["psha_b_fit"]      = b_fit
+    outputs["psha_figure"]     = fig
 
     return outputs
