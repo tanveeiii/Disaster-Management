@@ -17,6 +17,55 @@ plt.switch_backend('Agg')
 # Basic utilities
 # ---------------------------------------------------------------------
 
+from shapely.geometry import Point
+
+def filter_faults_by_radius(gdf_faults: gpd.GeoDataFrame, center_lat: float, center_long: float, radius_km: float) -> gpd.GeoDataFrame:
+    """
+    Filters a GeoDataFrame of faults to include only those within a specified radius of a location.
+    """
+    # Create a GeoSeries with the center point
+    center_pt = gpd.GeoSeries([Point(center_long, center_lat)], crs="EPSG:4326")
+    
+    # Project to an Azimuthal Equidistant projection centered on the user's coordinates.
+    # This ensures highly accurate distance measurements in meters.
+    custom_crs = f"+proj=aeqd +lat_0={center_lat} +lon_0={center_long} +units=m"
+    center_proj = center_pt.to_crs(custom_crs)
+    faults_proj = gdf_faults.to_crs(custom_crs)
+    
+    # Calculate the minimum distance from the center point to each fault line
+    distances_m = faults_proj.distance(center_proj.iloc[0])
+    
+    # Keep faults within the specified radius (converting km to meters)
+    mask = distances_m <= (radius_km * 1000)
+    
+    return gdf_faults[mask].copy().reset_index(drop=True)
+
+
+def filter_earthquakes_by_faults(gdf_eq: gpd.GeoDataFrame, gdf_faults: gpd.GeoDataFrame, buffer_km: float = 15) -> pd.DataFrame:
+    """
+    Filters earthquake data to include only those falling within a buffer zone of the provided faults.
+    """
+    if gdf_faults.empty:
+        return pd.DataFrame()
+
+    # Project both to EPSG:3857 (Web Mercator) to buffer in meters, matching your existing logic
+    gdf_eq_proj = gdf_eq.to_crs(epsg=3857)
+    gdf_faults_proj = gdf_faults.to_crs(epsg=3857)
+    
+    # Create a buffer polygon around each fault line
+    buffered_faults = gdf_faults_proj.geometry.buffer(buffer_km * 1000)
+    
+    # Combine all individual fault buffers into one continuous geographic zone (unary union)
+    combined_fault_zones = buffered_faults.unary_union
+    
+    # Create a mask for earthquakes that fall inside this combined zone
+    mask = gdf_eq_proj.within(combined_fault_zones)
+    
+    # Drop the geometry column and return standard pandas DataFrame for downstream AB/PSHA tasks
+    df_filtered = pd.DataFrame(gdf_eq[mask].drop(columns=['geometry']))
+    
+    return df_filtered.reset_index(drop=True)
+
 def normalize_columns(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
     df.columns = df.columns.str.lower().str.strip()
@@ -330,16 +379,55 @@ def compute_completeness_analysis(
 # ---------------------------------------------------------------------
 # Fault processing
 # ---------------------------------------------------------------------
+import pandas as pd
+import geopandas as gpd
+from shapely.geometry import LineString
 
-def load_faults_sheet(excel_path: str, sheet_name: str = "FAULTS") -> pd.DataFrame:
-    faults_df = pd.read_excel(excel_path, sheet_name=sheet_name)
-
-    # Keep the same behavior as your notebook
-    faults_df.columns = faults_df.iloc[0]
-    faults_df = faults_df.drop(index=0).reset_index(drop=True)
-    faults_df = faults_df[faults_df["Type of Fault"].notna()].copy()
-
-    return faults_df
+def load_and_build_faults_from_combined(csv_path: str) -> gpd.GeoDataFrame:
+    """
+    Reads the combined faults CSV, groups the coordinates by S.NO and SEISAT SHEET,
+    and builds continuous LineString geometries for each fault.
+    """
+    # 1. Load the CSV data
+    df = pd.read_csv(csv_path)
+    
+    # 2. Clean up column names just in case there are trailing spaces
+    df.columns = df.columns.str.strip()
+    
+    lines = []
+    metadata = []
+    
+    # 3. Group by 'SEISAT SHEET' and 'S.NO' 
+    # (We group by both because S.NO restarts at 1 for every new sheet)
+    grouped = df.groupby(['SEISAT SHEET', 'S.NO'])
+    
+    for (sheet, sno), group in grouped:
+        # Extract the sequence of coordinates for this specific fault
+        coords = list(zip(group['LONGITUDE'].astype(float), group['LATITUDE'].astype(float)))
+        
+        # A LineString requires at least 2 points to be drawn
+        if len(coords) >= 2:
+            line = LineString(coords)
+            lines.append(line)
+            
+            # Save the metadata from the first row of this group
+            first_row = group.iloc[0]
+            metadata.append({
+                'SEISAT SHEET': sheet,
+                'S.NO': sno,
+                'Type of Fault': first_row['FAULT TYPE'],
+                'NAME OF FAULT (IF ANY)': first_row.get('FAULT NAME', ''),
+                'Abbreviation': first_row.get('ABBREVIATION', ''),
+                # We save the start and end points in case your downstream formulas still need them
+                'LONG 1': coords[0][0],
+                'LAT 1': coords[0][1],
+                'LONG 2': coords[-1][0],
+                'LAT 2': coords[-1][1],
+            })
+            
+    # 4. Create and return the GeoDataFrame
+    gdf_faults = gpd.GeoDataFrame(metadata, geometry=lines, crs="EPSG:4326")
+    return gdf_faults
 
 
 def build_geodataframes(df_eq: pd.DataFrame, faults_df: pd.DataFrame):
@@ -692,6 +780,7 @@ def run_full_analysis(
     center_long: float,
     dist_km: float = 300,
     decluster_dist_km: float = 50,
+    fault_buffer_km: float = 15, # New parameter: how far from the fault to look for EQs
     start_year: int = 2020,
     fault_abbr: str | None = None,
     x_coord: float | None = None,
@@ -701,20 +790,41 @@ def run_full_analysis(
     z: float = 0.01,
     fault_output_path: str | None = None
 ):
-    """
-    One-call pipeline that preserves your notebook workflow.
-    Returns a dictionary of all major outputs.
-    """
+    # 1. Load and deduplicate raw earthquake data
     compiled_df = preprocess_compiled_sheet(excel_path, "Compiled")
     df_nodup = deduplicate_events(compiled_df)
+    
+# 1. Build Earthquakes GeoDataFrame (using your existing logic, just split out)
+    gdf_eq_all = gpd.GeoDataFrame(
+        df_nodup.copy(),
+        geometry=gpd.points_from_xy(df_nodup.longitude, df_nodup.latitude),
+        crs="EPSG:4326"
+    )
+    
+    # 2. Build Faults GeoDataFrame directly from the combined CSV
+    gdf_faults_all = load_and_build_faults_from_combined("India_Faults_Combined.xlsx - All Faults Combined.csv")
+    
+    # 3. Filter the grouped faults by the user's radius (from our previous update)
+    gdf_faults_local = filter_faults_by_radius(
+        gdf_faults_all, 
+        center_lat, 
+        center_long, 
+        dist_km
+    )
+    if gdf_faults_local.empty:
+        raise ValueError(f"No faults found within {dist_km}km of the specified location.")
+        
+    # 5. NEW LOGIC: Filter earthquakes to only those associated with the local faults
+    df_filtered_final = filter_earthquakes_by_faults(
+        gdf_eq_all, 
+        gdf_faults_local, 
+        buffer_km=fault_buffer_km
+    )
+    
+    # (Optional) You can still apply your declustering to this final set if desired
+    declustered_df = decluster(df_filtered_final, dist_km=decluster_dist_km)
 
-    # Same functionality as notebook; this stays available even if you use the sheet below.
-    declustered_df = decluster(df_nodup, dist_km=decluster_dist_km)
-
-    # Notebook used the already-prepared filtered sheet
-    df_filtered = load_sheet(excel_path, "Filtered Final")
-    df_filtered_final = filter_by_distance(df_filtered, center_lat, center_long, dist_km)
-
+    # 6. Run Completeness and Gutenberg-Richter A-B values on the strictly local, fault-associated data
     ab_results = compute_ab_psha(df_filtered_final, start_year=start_year)
     completeness_df = compute_completeness_analysis(df_filtered_final, end_year=start_year)
 
@@ -722,8 +832,8 @@ def run_full_analysis(
         "compiled_df": compiled_df,
         "df_nodup": df_nodup,
         "declustered_df": declustered_df,
-        "df_filtered": df_filtered,
         "df_filtered_final": df_filtered_final,
+        "local_faults": gdf_faults_local, # Added the filtered faults to the output
         "yearly_mag_df": ab_results["yearly_mag_df"],
         "cum_df": ab_results["cum_df"],
         "ab_df": ab_results["ab_df"],
@@ -733,16 +843,22 @@ def run_full_analysis(
         "figure": ab_results["figure"],
         "completeness_df": completeness_df,
     }
-
     if fault_abbr is not None:
         if None in (x_coord, y_coord, x_inter, y_inter):
             raise ValueError("x_coord, y_coord, x_inter, and y_inter are required for fault-table calculation.")
 
-        faults_df = load_faults_sheet(excel_path, "FAULTS")
-        gdf_eq, gdf_faults = build_geodataframes(df_filtered, faults_df)
-        gdf_faults = compute_fault_metrics(gdf_eq, gdf_faults)
+        # Rebuild GeoDataFrame for earthquakes using ONLY the final filtered local data
+        gdf_eq_local = gpd.GeoDataFrame(
+            df_filtered_final.copy(),
+            geometry=gpd.points_from_xy(df_filtered_final.longitude, df_filtered_final.latitude),
+            crs="EPSG:4326"
+        )
+        
+        # Calculate fault metrics (Length, Alpha, etc.) using ONLY the local faults and local earthquakes
+        gdf_faults_metrics = compute_fault_metrics(gdf_eq_local, gdf_faults_local)
 
-        fault_row = get_fault_row_by_abbr(gdf_faults, fault_abbr)
+        fault_row = get_fault_row_by_abbr(gdf_faults_metrics, fault_abbr)
+        
         fault_table, context = calculate_fault_table(
             fault_row=fault_row,
             b=ab_results["b"],
@@ -756,8 +872,8 @@ def run_full_analysis(
         context["x_inter"] = x_inter
         context["y_inter"] = y_inter
 
-        outputs["faults_df"] = faults_df
-        outputs["gdf_faults"] = gdf_faults
+        # Note: 'faults_df' is no longer needed since we use 'gdf_faults_local'
+        outputs["gdf_faults"] = gdf_faults_metrics
         outputs["fault_row"] = fault_row
         outputs["fault_table"] = fault_table
         outputs["fault_context"] = context
