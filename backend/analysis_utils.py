@@ -389,7 +389,7 @@ def load_and_build_faults_from_combined(csv_path: str) -> gpd.GeoDataFrame:
     and builds continuous LineString geometries for each fault.
     """
     # 1. Load the CSV data
-    df = pd.read_csv(csv_path)
+    df = pd.read_csv(csv_path, skiprows=1)
     
     # 2. Clean up column names just in case there are trailing spaces
     df.columns = df.columns.str.strip()
