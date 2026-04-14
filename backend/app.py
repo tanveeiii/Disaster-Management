@@ -49,15 +49,8 @@ def analyze():
             dist_km=300,
             decluster_dist_km=50,
             start_year=2020,
-
-            fault_abbr="FIBC13",
             x_coord=lat,
             y_coord=lon,
-            x_inter=21.88768577,
-            y_inter=75.60826815,
-            z=0.01,
-
-            fault_output_path=OUTPUT_PATH
         )
 
         df = result["df_filtered_final"]
