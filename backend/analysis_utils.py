@@ -99,11 +99,14 @@ def load_sheet(excel_path: str, sheet_name: str) -> pd.DataFrame:
 # Input + preprocessing
 # ---------------------------------------------------------------------
 
-def preprocess_compiled_sheet(excel_path: str, sheet_name: str = "Compiled") -> pd.DataFrame:
+def preprocess_compiled_sheet(excel_path: str) -> pd.DataFrame:
     """
-    Reads the compiled sheet and creates mw_final.
+    Reads the first sheet from the Excel file and creates mw_final.
     """
-    df = load_sheet(excel_path, sheet_name)
+    # Get the first sheet name from the Excel file
+    sheet_names = pd.ExcelFile(excel_path).sheet_names
+    first_sheet = sheet_names[0]
+    df = load_sheet(excel_path, first_sheet)
 
     if "magnitude" in df.columns and "mag type" in df.columns:
         df["mw_final"] = df.apply(
@@ -133,19 +136,25 @@ def deduplicate_events(df: pd.DataFrame) -> pd.DataFrame:
         keep="first"
     ).copy()
 
-    df_nodup["latitude"] = (
-        df_nodup["latitude"]
-        .astype(str)
-        .str.replace(",", "", regex=False)
-        .str.strip()
-    )
-    df_nodup["longitude"] = (
-        df_nodup["longitude"]
-        .astype(str)
-        .str.replace(",", "", regex=False)
-        .str.strip()
-    )
+    # Handle latitude: only apply string operations if it's string type
+    if df_nodup["latitude"].dtype == 'object':
+        df_nodup["latitude"] = (
+            df_nodup["latitude"]
+            .astype(str)
+            .str.replace(",", "", regex=False)
+            .str.strip()
+        )
+    
+    # Handle longitude: only apply string operations if it's string type
+    if df_nodup["longitude"].dtype == 'object':
+        df_nodup["longitude"] = (
+            df_nodup["longitude"]
+            .astype(str)
+            .str.replace(",", "", regex=False)
+            .str.strip()
+        )
 
+    # Convert both to numeric (handles integers, floats, and strings)
     df_nodup["latitude"] = pd.to_numeric(df_nodup["latitude"], errors="coerce")
     df_nodup["longitude"] = pd.to_numeric(df_nodup["longitude"], errors="coerce")
 
@@ -745,7 +754,7 @@ def run_full_analysis(
     psha_output_path: str = None,   # Excel path for full PSHA export; None = skip writing
 ):
     # 1. Load and deduplicate
-    compiled_df = preprocess_compiled_sheet(excel_path, "Compiled")
+    compiled_df = preprocess_compiled_sheet(excel_path)
     df_nodup    = deduplicate_events(compiled_df)
 
     gdf_eq_all = gpd.GeoDataFrame(

@@ -204,6 +204,8 @@
 
 import { useState, useRef } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   Activity, MapPin, Download, BarChart3, Upload,
   FileSpreadsheet, Layers, GitBranch, Zap, TrendingDown,
@@ -214,66 +216,199 @@ const API_URL = "http://127.0.0.1:5000/analyze";
 
 // ─── Sidebar nav items — each maps to a key in the response ──────────────────
 const NAV_SECTIONS = [
-  { key: "overview",        label: "Overview",               icon: BarChart3,    desc: "Key stats & GR curve" },
-  { key: "gr_curve",        label: "GR Curve",               icon: TrendingDown, desc: "Gutenberg–Richter plot" },
-  { key: "compiled",        label: "Compiled catalog",       icon: Table2,       desc: "Raw deduplicated events" },
-  { key: "filtered",        label: "Filtered catalog",       icon: Layers,       desc: "Events after fault filter" },
-  { key: "declustered",     label: "Declustered catalog",    icon: GitBranch,    desc: "Mainshocks only" },
-  { key: "yearly_mag",      label: "Yearly magnitude",       icon: Table2,       desc: "Event count per year/band" },
-  { key: "cumulative",      label: "Cumulative counts",      icon: Table2,       desc: "Cumulative G-R table" },
-  { key: "ab_table",        label: "A-B PSHA table",         icon: Table2,       desc: "logN vs magnitude" },
-  { key: "completeness",    label: "Completeness",           icon: Table2,       desc: "Stepp completeness table" },
-  { key: "faults",          label: "Fault metrics",          icon: GitBranch,    desc: "Fault lengths, weights, α" },
-  { key: "psha_summary",    label: "PSHA summary",           icon: Zap,          desc: "µ(z) vs PGA table" },
-  { key: "mare",            label: "MARE table",             icon: Zap,          desc: "Return period PGA values" },
-  { key: "hazard_curve",    label: "Hazard curve",           icon: TrendingDown, desc: "PGA exceedance curve" },
+  { key: "overview", label: "Overview", icon: BarChart3, desc: "Key stats & GR curve" },
+  { key: "gr_curve", label: "GR Curve", icon: TrendingDown, desc: "Gutenberg–Richter plot" },
+  { key: "compiled", label: "Compiled catalog", icon: Table2, desc: "Raw deduplicated events" },
+  { key: "filtered", label: "Filtered catalog", icon: Layers, desc: "Events after fault filter" },
+  { key: "declustered", label: "Declustered catalog", icon: GitBranch, desc: "Mainshocks only" },
+  { key: "yearly_mag", label: "Yearly magnitude", icon: Table2, desc: "Event count per year/band" },
+  { key: "cumulative", label: "Cumulative counts", icon: Table2, desc: "Cumulative G-R table" },
+  { key: "ab_table", label: "A-B PSHA table", icon: Table2, desc: "logN vs magnitude" },
+  { key: "completeness", label: "Completeness", icon: Table2, desc: "Stepp completeness table" },
+  { key: "faults", label: "Fault metrics", icon: GitBranch, desc: "Fault lengths, weights, α" },
+  { key: "psha_summary", label: "PSHA summary", icon: Zap, desc: "µ(z) vs PGA table" },
+  { key: "mare", label: "MARE table", icon: Zap, desc: "Return period PGA values" },
+  { key: "hazard_curve", label: "Hazard curve", icon: TrendingDown, desc: "PGA exceedance curve" },
 ];
 
 // ─── Root ─────────────────────────────────────────────────────────────────────
 export default function App() {
   const [report, setReport] = useState(null);
-  if (report) return <ReportView data={report} onReset={() => setReport(null)} />;
-  return <InputView onSuccess={setReport} />;
+  if (report) return (
+    <>
+      <ReportView data={report} onReset={() => setReport(null)} />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </>
+  );
+  return (
+    <>
+      <InputView onSuccess={setReport} />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </>
+  );
 }
 
 // ─── Input form ───────────────────────────────────────────────────────────────
 function InputView({ onSuccess }) {
-  const [loading, setLoading]   = useState(false);
-  const [file, setFile]         = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null);
   const [dragOver, setDragOver] = useState(false);
-  const [form, setForm]         = useState({
+  const [form, setForm] = useState({
     lat: '', lon: '', radius: '300', decluster: '50', buffer: '15',
     x_coord: '', y_coord: '', start_year: '2020'
   });
   const fileRef = useRef();
 
   const handleFile = (f) => {
-    if (f && (f.name.endsWith('.xlsx') || f.name.endsWith('.xls'))) setFile(f);
-    else alert('Please upload an Excel file (.xlsx or .xls)');
+    if (f) {
+      if (f.name.endsWith('.xlsx') || f.name.endsWith('.xls')) {
+        if (f.size > 50 * 1024 * 1024) {
+          toast.error('File is too large. Maximum size is 50MB.', {
+            icon: '📁',
+            autoClose: 4000
+          });
+          return;
+        }
+        setFile(f);
+        toast.success(`File selected: ${f.name}`, {
+          icon: '✅',
+          autoClose: 2000
+        });
+      } else {
+        toast.error('Please upload an Excel file (.xlsx or .xls)', {
+          icon: '📁',
+          autoClose: 4000
+        });
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!file) { alert('Please upload your earthquake Excel file.'); return; }
+    if (!file) {
+      toast.error('Please upload your earthquake Excel file.', {
+        position: 'top-center',
+        icon: '📁'
+      });
+      return;
+    }
     setLoading(true);
     const fd = new FormData();
     fd.append('file', file);
-    fd.append('latitude',      parseFloat(form.lat));
-    fd.append('longitude',     parseFloat(form.lon));
-    fd.append('radius',        parseFloat(form.radius));
-    fd.append('decluster_km',  parseFloat(form.decluster));
-    fd.append('buffer_km',     parseFloat(form.buffer));
-    fd.append('x_coord',       parseFloat(form.x_coord || form.lat));
-    fd.append('y_coord',       parseFloat(form.y_coord || form.lon));
-    fd.append('start_year',    parseInt(form.start_year));
+    fd.append('latitude', parseFloat(form.lat));
+    fd.append('longitude', parseFloat(form.lon));
+    fd.append('radius', parseFloat(form.radius));
+    fd.append('decluster_km', parseFloat(form.decluster));
+    fd.append('buffer_km', parseFloat(form.buffer));
+    fd.append('x_coord', parseFloat(form.x_coord || form.lat));
+    fd.append('y_coord', parseFloat(form.y_coord || form.lon));
+    fd.append('start_year', parseInt(form.start_year));
+
+    let loadingToastId = null;
     try {
-      const res = await axios.post(API_URL, fd, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+      // Show loading toast and store its ID
+      loadingToastId = toast.loading('🔄 Running analysis... (This may take a few minutes)', {
+        position: 'bottom-right'
       });
-      if (res.data.status === 'success') onSuccess(res.data);
-      else alert('Error: ' + res.data.message);
-    } catch {
-      alert('Could not connect to Flask server. Make sure it is running on port 5000.');
+
+      const res = await axios.post(API_URL, fd, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 600000  // 10 minutes - seismic analysis is computationally intensive
+      });
+
+      // Dismiss loading toast if it exists
+      if (loadingToastId !== null) {
+        toast.dismiss(loadingToastId);
+      }
+
+      if (res.data.status === 'success') {
+        toast.success('✅ Analysis completed successfully!', {
+          autoClose: 3000,
+          position: 'bottom-right'
+        });
+        onSuccess(res.data);
+      } else {
+        const errorMsg = res.data.message || 'Unknown error occurred';
+        const errorType = res.data.type || 'error';
+
+        let displayMsg = errorMsg;
+        let icon = '⚠️';
+
+        if (errorType === 'column_error') {
+          icon = '📋';
+          displayMsg = `Missing Columns:\n${errorMsg}`;
+        } else if (errorType === 'file_error') {
+          icon = '📁';
+          displayMsg = `File Error: ${errorMsg}`;
+        } else if (errorType === 'parameter_error') {
+          icon = '⚙️';
+          displayMsg = `Parameter Error: ${errorMsg}`;
+        } else if (errorType === 'data_error') {
+          icon = '📊';
+          displayMsg = `Data Error: ${errorMsg}`;
+        } else if (errorType === 'analysis_error') {
+          icon = '❌';
+          displayMsg = `Analysis Error: ${errorMsg}`;
+        }
+
+        toast.error(displayMsg, {
+          icon,
+          autoClose: 5000,
+          position: 'top-center'
+        });
+      }
+    } catch (error) {
+      // Dismiss loading toast if it exists
+      if (loadingToastId !== null) {
+        toast.dismiss(loadingToastId);
+      }
+
+      let errorMsg = 'Could not connect to Flask server. Make sure it is running on port 5000.';
+      let icon = '🔌';
+
+      if (error.response?.status === 400) {
+        const data = error.response.data;
+        errorMsg = data.message || 'Bad request - check your input parameters';
+        icon = '⚠️';
+      } else if (error.response?.status === 500) {
+        const data = error.response.data;
+        errorMsg = data.message || 'Server error - please check the backend logs';
+        icon = '❌';
+      } else if (error.code === 'ECONNABORTED') {
+        errorMsg = 'Request timeout - Analysis took too long. Try reducing the radius or buffer distance to speed things up.';
+        icon = '⏱️';
+      } else if (error.message === 'Network Error') {
+        errorMsg = 'Network error - check your internet connection';
+        icon = '📡';
+      }
+
+      toast.error(errorMsg, {
+        icon,
+        autoClose: 5000,
+        position: 'top-center'
+      });
     } finally {
       setLoading(false);
     }
@@ -362,7 +497,7 @@ function InputView({ onSuccess }) {
                   <p style={{ margin: 0, fontSize: 14, color: '#64748b' }}>
                     Drop your <strong>.xlsx</strong> file here or <span style={{ color: '#3b82f6' }}>browse</span>
                   </p>
-                  <p style={{ margin: '4px 0 0', fontSize: 12, color: '#94a3b8' }}>Must contain a "Compiled" sheet</p>
+                  <p style={{ margin: '4px 0 0', fontSize: 12, color: '#94a3b8' }}>Must contain columns: year, month, date, hours, minutes, latitude, longitude, magnitude, mag type</p>
                 </div>
               )}
             </div>
@@ -379,14 +514,14 @@ function InputView({ onSuccess }) {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
-              {F('lat',  'Center latitude',  { required: true, placeholder: 'e.g. 22.62' })}
-              {F('lon',  'Center longitude', { required: true, placeholder: 'e.g. 75.69' })}
+              {F('lat', 'Center latitude', { required: true, placeholder: 'e.g. 22.62' })}
+              {F('lon', 'Center longitude', { required: true, placeholder: 'e.g. 75.69' })}
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 20 }}>
-              {F('radius',   'Radius (km)',   { placeholder: '300' })}
-              {F('decluster','Decluster (km)',{ placeholder: '50'  })}
-              {F('buffer',   'Fault buffer (km)', { placeholder: '15' })}
+              {F('radius', 'Radius (km)', { placeholder: '300' })}
+              {F('decluster', 'Decluster (km)', { placeholder: '50' })}
+              {F('buffer', 'Fault buffer (km)', { placeholder: '15' })}
             </div>
 
             {/* PSHA site divider */}
@@ -399,9 +534,9 @@ function InputView({ onSuccess }) {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 28 }}>
-              {F('x_coord',    'Site latitude',  { required: false, placeholder: 'defaults to center lat', hint: 'Leave blank to use center lat' })}
-              {F('y_coord',    'Site longitude', { required: false, placeholder: 'defaults to center lon', hint: 'Leave blank to use center lon' })}
-              {F('start_year', 'End year',       { placeholder: '2020', hint: 'Year analysis ends at' })}
+              {F('x_coord', 'Site latitude', { required: false, placeholder: 'defaults to center lat', hint: 'Leave blank to use center lat' })}
+              {F('y_coord', 'Site longitude', { required: false, placeholder: 'defaults to center lon', hint: 'Leave blank to use center lon' })}
+              {F('start_year', 'End year', { placeholder: '2020', hint: 'Year analysis ends at' })}
             </div>
 
             <button
@@ -510,34 +645,34 @@ function ReportView({ data, onReset }) {
 // ─── Panel router ─────────────────────────────────────────────────────────────
 function PanelContent({ section, data }) {
   switch (section) {
-    case 'overview':    return <OverviewPanel data={data} />;
-    case 'gr_curve':    return <GraphPanel title="Gutenberg–Richter relation" b64={data.graph} subtitle="log₁₀(N) vs Magnitude" />;
-    case 'hazard_curve':return <GraphPanel title="Seismic hazard curve" b64={data.hazard_curve} subtitle="Mean annual rate of exceedance vs PGA (g)" />;
-    case 'compiled':    return <TablePanel title="Compiled catalog" subtitle="All events after deduplication" rows={data.compiled_preview} />;
-    case 'filtered':    return <TablePanel title="Filtered catalog" subtitle="Events within fault buffer zone" rows={data.filtered_preview} />;
+    case 'overview': return <OverviewPanel data={data} />;
+    case 'gr_curve': return <GraphPanel title="Gutenberg–Richter relation" b64={data.graph} subtitle="log₁₀(N) vs Magnitude" />;
+    case 'hazard_curve': return <GraphPanel title="Seismic hazard curve" b64={data.hazard_curve} subtitle="Mean annual rate of exceedance vs PGA (g)" />;
+    case 'compiled': return <TablePanel title="Compiled catalog" subtitle="All events after deduplication" rows={data.compiled_preview} />;
+    case 'filtered': return <TablePanel title="Filtered catalog" subtitle="Events within fault buffer zone" rows={data.filtered_preview} />;
     case 'declustered': return <TablePanel title="Declustered catalog" subtitle="Mainshocks only after Gardner–Knopoff declustering" rows={data.declustered_preview} />;
-    case 'yearly_mag':  return <TablePanel title="Yearly magnitude counts" subtitle="Number of events per year per magnitude band" rows={data.yearly_mag} />;
-    case 'cumulative':  return <TablePanel title="Cumulative counts" subtitle="Cumulative G–R table" rows={data.cumulative} />;
-    case 'ab_table':    return <TablePanel title="A–B PSHA table" subtitle="logN vs magnitude — Gutenberg–Richter regression inputs" rows={data.ab_table} />;
-    case 'completeness':return <TablePanel title="Completeness analysis" subtitle="Stepp method — λ and σ per period per magnitude band" rows={data.completeness} />;
-    case 'faults':      return <TablePanel title="Fault metrics" subtitle="Fault lengths, earthquake counts, weights, and revised α" rows={data.fault_metrics} />;
-    case 'psha_summary':return <TablePanel title="PSHA summary" subtitle="Total µ(z) and return period for each PGA value" rows={data.psha_summary} />;
-    case 'mare':        return <MarePanel data={data} />;
-    default:            return null;
+    case 'yearly_mag': return <TablePanel title="Yearly magnitude counts" subtitle="Number of events per year per magnitude band" rows={data.yearly_mag} />;
+    case 'cumulative': return <TablePanel title="Cumulative counts" subtitle="Cumulative G–R table" rows={data.cumulative} />;
+    case 'ab_table': return <TablePanel title="A–B PSHA table" subtitle="logN vs magnitude — Gutenberg–Richter regression inputs" rows={data.ab_table} />;
+    case 'completeness': return <TablePanel title="Completeness analysis" subtitle="Stepp method — λ and σ per period per magnitude band" rows={data.completeness} />;
+    case 'faults': return <TablePanel title="Fault metrics" subtitle="Fault lengths, earthquake counts, weights, and revised α" rows={data.fault_metrics} />;
+    case 'psha_summary': return <TablePanel title="PSHA summary" subtitle="Total µ(z) and return period for each PGA value" rows={data.psha_summary} />;
+    case 'mare': return <MarePanel data={data} />;
+    default: return null;
   }
 }
 
 // ─── Overview ─────────────────────────────────────────────────────────────────
 function OverviewPanel({ data }) {
   const stats = [
-    { label: 'a-value',         value: typeof data.a_value === 'number' ? data.a_value.toFixed(4) : data.a_value },
-    { label: 'b-value',         value: typeof data.b_value === 'number' ? data.b_value.toFixed(4) : data.b_value },
-    { label: 'R²',              value: typeof data.r2 === 'number' ? data.r2.toFixed(4) : data.r2 },
-    { label: 'Total events',    value: data.number_of_earthquakes },
-    { label: 'After dedup',     value: data.dedup_count ?? '—' },
-    { label: 'After filter',    value: data.filtered_count ?? '—' },
+    { label: 'a-value', value: typeof data.a_value === 'number' ? data.a_value.toFixed(4) : data.a_value },
+    { label: 'b-value', value: typeof data.b_value === 'number' ? data.b_value.toFixed(4) : data.b_value },
+    { label: 'R²', value: typeof data.r2 === 'number' ? data.r2.toFixed(4) : data.r2 },
+    { label: 'Total events', value: data.number_of_earthquakes },
+    { label: 'After dedup', value: data.dedup_count ?? '—' },
+    { label: 'After filter', value: data.filtered_count ?? '—' },
     { label: 'After decluster', value: data.declustered_count ?? '—' },
-    { label: 'Faults found',    value: data.fault_count ?? '—' },
+    { label: 'Faults found', value: data.fault_count ?? '—' },
   ];
 
   return (

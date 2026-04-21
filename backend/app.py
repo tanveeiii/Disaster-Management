@@ -37,22 +37,39 @@ def convert_fault_table_to_json(df):
 @app.route("/analyze", methods=["POST"])
 def analyze():
     try:
-        # ─── Read form-data ─────────────────────────────
-        lat = float(request.form.get("latitude"))
-        lon = float(request.form.get("longitude"))
+        # ─── Validate file upload ───────────────────────
+        file = request.files.get("file")
+        if not file:
+            return jsonify({
+                "status": "error",
+                "type": "file_error",
+                "message": "No file uploaded. Please select an Excel file."
+            }), 400
 
-        dist_km = float(request.form.get("radius"))
-        decluster_km = float(request.form.get("decluster_km"))
-        buffer_km = float(request.form.get("buffer_km"))
+        if not file.filename.endswith(('.xlsx', '.xls')):
+            return jsonify({
+                "status": "error",
+                "type": "file_error",
+                "message": "Invalid file format. Please upload an Excel file (.xlsx or .xls)."
+            }), 400
+
+        # ─── Save and validate parameters ────────────────
+        try:
+            lat = float(request.form.get("latitude"))
+            lon = float(request.form.get("longitude"))
+            dist_km = float(request.form.get("radius"))
+            decluster_km = float(request.form.get("decluster_km"))
+            buffer_km = float(request.form.get("buffer_km"))
+            start_year = int(request.form.get("start_year"))
+        except (ValueError, TypeError) as e:
+            return jsonify({
+                "status": "error",
+                "type": "parameter_error",
+                "message": f"Invalid parameter values. Please check: latitude, longitude, radius, decluster distance, buffer distance, and start year must be valid numbers."
+            }), 400
 
         x_coord = float(request.form.get("x_coord") or lat)
         y_coord = float(request.form.get("y_coord") or lon)
-
-        start_year = int(request.form.get("start_year"))
-
-        file = request.files.get("file")
-        if not file:
-            return jsonify({"status": "error", "message": "No file uploaded"})
 
         file.save(DATA_PATH)
 
@@ -155,11 +172,52 @@ def analyze():
             "download_excel": "http://127.0.0.1:5000/download-excel"
         })
 
-    except Exception as e:
+    except KeyError as e:
+        error_msg = str(e)
+        if "magnitude" in error_msg or "mag type" in error_msg:
+            return jsonify({
+                "status": "error",
+                "type": "column_error",
+                "message": f"Missing required columns. The Excel file must contain 'magnitude' and 'mag type' columns."
+            }), 400
+        elif "year" in error_msg or "month" in error_msg or "latitude" in error_msg or "longitude" in error_msg:
+            return jsonify({
+                "status": "error",
+                "type": "column_error",
+                "message": f"Missing required columns. The Excel file must contain: year, month, date, hours, minutes, latitude, and longitude."
+            }), 400
+        else:
+            return jsonify({
+                "status": "error",
+                "type": "column_error",
+                "message": f"Missing required column: {error_msg}"
+            }), 400
+
+    except ValueError as e:
         return jsonify({
             "status": "error",
-            "message": str(e)
-        })
+            "type": "data_error",
+            "message": f"Data processing error: {str(e)}"
+        }), 400
+
+    except FileNotFoundError as e:
+        return jsonify({
+            "status": "error",
+            "type": "file_error",
+            "message": "Required data files not found. Please ensure India_Faults_Combined.csv is in the backend directory."
+        }), 400
+
+    except Exception as e:
+        import traceback
+        error_type = type(e).__name__
+        error_msg = str(e)
+        
+        return jsonify({
+            "status": "error",
+            "type": "analysis_error",
+            "message": f"Analysis failed: {error_msg}",
+            "details": error_type
+        }), 500
 
 @app.route("/download-excel", methods=["GET"])
 def download_excel():
