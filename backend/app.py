@@ -223,6 +223,10 @@ def analyze():
 def download_excel():
     return send_file(OUTPUT_PATH, as_attachment=True)
 
+@app.route("/map", methods=["GET"])
+def serve_map():
+    return send_file("entire_india_faults.html", mimetype="text/html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

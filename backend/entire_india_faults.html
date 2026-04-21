@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_64168e2207fca411e8bee6e58be36670 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_64168e2207fca411e8bee6e58be36670" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_64168e2207fca411e8bee6e58be36670 = L.map(
+                "map_64168e2207fca411e8bee6e58be36670",
+                {
+                    center: [22.0, 78.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 5,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_cdfe7d5285caafad9e1471020d198a10 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_cdfe7d5285caafad9e1471020d198a10.addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            var poly_line_c38a1aeb66b3d5538f01cb9274dea185 = L.polyline(
+                [[25.02, 74.12], [25.2, 74.28], [25.0, 73.59], [25.2, 73.7], [25.35, 73.8], [25.5, 73.9], [25.6, 73.96], [25.97, 73.83], [26.1, 73.91], [26.27, 74.0], [26.41, 74.1], [26.52, 74.23]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_c38a1aeb66b3d5538f01cb9274dea185.bindTooltip(
+                `<div>
+                     <b>Unnamed Fault (NTF19)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_560d8dcb9d70d5658c4557ae00340a8c = L.polyline(
+                [[25.18, 74.29], [25.0, 74.16], [25.71, 73.95], [25.82, 74.1]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_560d8dcb9d70d5658c4557ae00340a8c.bindTooltip(
+                `<div>
+                     <b>Unnamed Fault (NTF20)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_5ba4e80e33ab314f184dd4dc1d64a661 = L.polyline(
+                [[25.05, 74.28], [25.33, 74.47], [25.8, 74.02], [25.85, 74.15]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_5ba4e80e33ab314f184dd4dc1d64a661.bindTooltip(
+                `<div>
+                     <b>Unnamed Fault (NTF21)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_7439267967e3b5c952c251aa6cb2e58c = L.polyline(
+                [[25.01, 74.35], [25.12, 74.43], [25.82, 73.83], [25.92, 73.95]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_7439267967e3b5c952c251aa6cb2e58c.bindTooltip(
+                `<div>
+                     <b>Unnamed Fault (NTF22)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_1a0aaadc2ed5bf96b4c5a9682d8a083a = L.polyline(
+                [[25.19, 74.55], [25.3, 74.75], [25.45, 74.96]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_1a0aaadc2ed5bf96b4c5a9682d8a083a.bindTooltip(
+                `<div>
+                     <b>Unnamed Fault (NTF23)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_dc84d734421134ffb40baf8f14e93974 = L.polyline(
+                [[25.01, 74.78], [25.15, 74.89]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_dc84d734421134ffb40baf8f14e93974.bindTooltip(
+                `<div>
+                     <b>Unnamed Fault (NTF24)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_2a4a473b3fa371832f27cd0a5e82138e = L.polyline(
+                [[25.2, 75.2], [25.28, 75.35], [25.45, 75.5], [25.52, 75.71], [25.56, 75.73], [25.65, 76.0], [25.79, 76.2], [25.85, 76.3], [25.93, 76.43], [26.18, 76.5], [26.33, 76.65], [26.42, 77.0], [26.55, 77.15], [26.75, 77.3], [26.85, 77.4], [26.9, 77.55]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_2a4a473b3fa371832f27cd0a5e82138e.bindTooltip(
+                `<div>
+                     <b>GREAT BOUNDARY FAULT</b><br>Type: FAULT INVOLVING BASEMENT & COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_0e57958215d9d614db0354902b108556 = L.polyline(
+                [[25.41, 75.01], [25.7, 75.32], [25.81, 75.6], [26.0, 75.9], [26.1, 76.0], [26.18, 76.1]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_0e57958215d9d614db0354902b108556.bindTooltip(
+                `<div>
+                     <b>BHARATPUR MOUNT ABU FAULT</b><br>Type: FAULT INVOLVING BASEMENT & COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_d47fd89a2d48614f5338a503e1cf077b = L.polyline(
+                [[21.1, 72.6], [21.2, 72.8], [21.3, 72.98], [22.15, 73.4], [22.12, 73.5], [22.1, 73.6], [22.15, 73.48]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_d47fd89a2d48614f5338a503e1cf077b.bindTooltip(
+                `<div>
+                     <b>Unnamed Fault (F1)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_119def1f6faaf482a9b2277c749f7132 = L.polyline(
+                [[21.93, 72.7], [21.88, 72.75], [21.83, 72.8], [22.15, 73.75], [22.23, 73.9]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_119def1f6faaf482a9b2277c749f7132.bindTooltip(
+                `<div>
+                     <b>PALDI FAULT (F2a)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_e885531677b9927d185333b4d2cf4480 = L.polyline(
+                [[21.55, 72.91], [21.46, 72.96], [22.15, 73.93], [22.2, 74.07]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_e885531677b9927d185333b4d2cf4480.bindTooltip(
+                `<div>
+                     <b>PALDI FAULT (F2b)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_729ceea3e5ae07072877a1111a7aef60 = L.polyline(
+                [[23.5, 72.0], [23.4, 72.1], [23.2, 72.2], [23.1, 72.3], [23.0, 72.35], [22.9, 72.4], [22.65, 72.38], [22.35, 72.35], [22.0, 73.8], [22.03, 73.83], [22.07, 73.9], [22.1, 74.04]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_729ceea3e5ae07072877a1111a7aef60.bindTooltip(
+                `<div>
+                     <b>MARGINAL FAULT (F3a)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_210a4680388707564b8f10e5d1964477 = L.polyline(
+                [[24.35, 72.03], [24.2, 72.1], [24.1, 72.2], [24.0, 72.3], [23.85, 72.4], [23.6, 72.5], [23.4, 72.7], [23.2, 72.8], [23.0, 72.9], [22.8, 72.95], [22.6, 73.0], [22.4, 73.08], [22.2, 73.15], [22.1, 73.3]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_210a4680388707564b8f10e5d1964477.bindTooltip(
+                `<div>
+                     <b>MARGINAL FAULT (F3b)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_70bee640c229f7163dd392136fa1235b = L.polyline(
+                [[24.5, 72.0], [24.55, 72.25], [24.65, 72.5]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_70bee640c229f7163dd392136fa1235b.bindTooltip(
+                `<div>
+                     <b>MARGINAL FAULT (F3c)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_7f255f324c10a2d85261e75568c10a8b = L.polyline(
+                [[24.7, 72.08], [24.8, 72.12], [25.0, 72.16]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_7f255f324c10a2d85261e75568c10a8b.bindTooltip(
+                `<div>
+                     <b>MARGINAL FAULT (F3d)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_76bc82118a0b9e97b60b5f60e4646f2d = L.polyline(
+                [[21.4, 73.2], [21.45, 73.5], [21.45, 73.8], [21.5, 74.0], [21.55, 74.2], [21.6, 74.4], [21.65, 74.7]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_76bc82118a0b9e97b60b5f60e4646f2d.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4a)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_d1be204bfdcd128793384eb371aebc3a = L.polyline(
+                [[21.55, 74.45], [21.6, 74.6], [21.7, 74.7]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_d1be204bfdcd128793384eb371aebc3a.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4b)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_05736ba36df6e096b4fa5d3499956be7 = L.polyline(
+                [[21.4, 74.4], [21.47, 74.57], [21.55, 74.7]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_05736ba36df6e096b4fa5d3499956be7.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4c)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_1ec7127892d93a9a4e6ee78d62d777d6 = L.polyline(
+                [[21.52, 74.54], [21.4, 74.8], [21.25, 75.0]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_1ec7127892d93a9a4e6ee78d62d777d6.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4d)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_ecb9aeecb99007bc1f126ae7517b054e = L.polyline(
+                [[21.67, 74.6], [21.55, 74.7], [21.4, 74.8]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_ecb9aeecb99007bc1f126ae7517b054e.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4e)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_b45e8a508a619556b99629819deafe14 = L.polyline(
+                [[21.38, 74.8], [21.41, 74.87], [21.46, 74.92]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_b45e8a508a619556b99629819deafe14.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4f)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_d34375d5407fc125415e05e649d0b42f = L.polyline(
+                [[21.41, 74.87], [21.38, 74.92]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_d34375d5407fc125415e05e649d0b42f.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4g)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_d5f53d7893e675d17fd10ead7da2e03e = L.polyline(
+                [[21.35, 74.9], [21.28, 75.0]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_d5f53d7893e675d17fd10ead7da2e03e.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4h)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_ce017908297c4c33a43c3dd447ea51f1 = L.polyline(
+                [[21.33, 74.89], [21.4, 74.93]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_ce017908297c4c33a43c3dd447ea51f1.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4i)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_b33aaef1e56f901d12b698e2731e8731 = L.polyline(
+                [[21.75, 73.25], [21.8, 73.5], [21.87, 73.8], [21.9, 74.0], [21.95, 74.2], [22.0, 74.4], [22.05, 74.6], [22.08, 74.8]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_b33aaef1e56f901d12b698e2731e8731.bindTooltip(
+                `<div>
+                     <b>SON NARMADA FAULT (F5a)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_6b013be55632ef5eee4f0361df19aee4 = L.polyline(
+                [[21.7, 73.5], [21.8, 73.75], [21.9, 73.9]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_6b013be55632ef5eee4f0361df19aee4.bindTooltip(
+                `<div>
+                     <b>SON NARMADA FAULT (F5b)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_38541aeea949c9be49bee762e0114a3b = L.polyline(
+                [[21.8, 73.55], [21.85, 73.8]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_38541aeea949c9be49bee762e0114a3b.bindTooltip(
+                `<div>
+                     <b>SON NARMADA FAULT (F5c)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_c341e8853c1397079a3f8ab962d6f517 = L.polyline(
+                [[21.8, 73.8], [21.9, 73.9]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_c341e8853c1397079a3f8ab962d6f517.bindTooltip(
+                `<div>
+                     <b>SON NARMADA FAULT (F5d)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_94f75c6f53d4188a6c033819dff96873 = L.polyline(
+                [[22.1, 74.72], [21.95, 74.86], [21.8, 75.0]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_94f75c6f53d4188a6c033819dff96873.bindTooltip(
+                `<div>
+                     <b>BARWANI SUKTA FAULT (F6)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_48a9206b166b43ab20c2e05fff942f7f = L.polyline(
+                [[21.8, 75.0], [21.65, 75.2], [21.55, 75.4], [21.5, 75.7], [21.54, 76.0], [21.58, 76.2], [21.65, 76.4], [22.5, 75.85], [22.46, 75.9], [22.42, 75.99], [21.3, 75.4], [21.15, 75.7], [21.1, 76.0], [21.08, 76.08], [21.93, 75.85], [21.96, 76.0], [22.0, 76.2], [22.15, 76.5], [22.2, 76.75], [22.25, 77.0], [22.65, 77.3], [22.5, 77.6], [22.58, 77.9]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_48a9206b166b43ab20c2e05fff942f7f.bindTooltip(
+                `<div>
+                     <b>BARWANI SUKTA FAULT</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_e25399bfbcc9c26e8f1c2d185d890743 = L.polyline(
+                [[21.7, 75.6], [21.75, 75.8], [21.8, 76.0], [21.8, 76.2], [21.84, 76.4], [21.9, 76.6], [22.0, 76.9], [22.1, 77.0], [22.15, 77.15], [22.3, 77.4], [22.4, 77.8], [22.52, 77.9], [22.6, 78.0], [21.35, 75.85], [21.39, 76.08], [22.5, 75.2], [22.45, 75.6], [22.5, 76.0], [22.55, 76.2], [22.6, 76.7], [22.7, 77.0], [22.8, 77.1]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_e25399bfbcc9c26e8f1c2d185d890743.bindTooltip(
+                `<div>
+                     <b>SON NARMADA FAULT (F5e)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_54ebd11cca856d1d0e2e85d9929e3e6b = L.polyline(
+                [[22.3, 77.5], [22.4, 77.65], [22.5, 77.8], [22.55, 78.0], [21.32, 75.95], [21.36, 76.06], [21.4, 76.2], [21.45, 76.3]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_54ebd11cca856d1d0e2e85d9929e3e6b.bindTooltip(
+                `<div>
+                     <b>SON NARMADA FAULT (F5f)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_0c1ca7b75298b48919f9ca284c0cf77f = L.polyline(
+                [[21.33, 75.0], [21.3, 75.1], [21.25, 76.08], [21.29, 76.18], [21.4, 76.15], [21.5, 76.5], [21.55, 76.8], [21.6, 77.0], [21.7, 77.2], [21.8, 77.6], [21.98, 78.0]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_0c1ca7b75298b48919f9ca284c0cf77f.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4k)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_e0cb4340b2b9ef0d0bc491959cd792d8 = L.polyline(
+                [[21.29, 75.1], [21.38, 75.2], [22.1, 76.08], [22.12, 76.18], [21.58, 76.85], [21.65, 77.0], [21.85, 77.2], [22.0, 77.35], [22.2, 77.5], [22.25, 77.75], [21.3, 77.98]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_e0cb4340b2b9ef0d0bc491959cd792d8.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4l)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_87a57456b5c254f8c5f8374eb425ea7b = L.polyline(
+                [[21.31, 75.15], [21.3, 75.3], [22.01, 76.1], [22.05, 76.2]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_87a57456b5c254f8c5f8374eb425ea7b.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4m)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_651705962da863830dbb725f7684c247 = L.polyline(
+                [[21.25, 75.18], [21.24, 75.32], [21.95, 76.12], [22.04, 76.21]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_651705962da863830dbb725f7684c247.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4n)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_0be50e9eb2dc0a708bbee7f0a473a371 = L.polyline(
+                [[21.24, 75.34], [21.4, 75.4]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_0be50e9eb2dc0a708bbee7f0a473a371.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4o)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_94ba0ccd9d66f9749a94f90e8803b169 = L.polyline(
+                [[21.3, 75.35], [21.25, 75.7], [21.3, 76.0], [21.4, 76.15]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_94ba0ccd9d66f9749a94f90e8803b169.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4p)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_0843007523f8060ca12885de93d4d9f8 = L.polyline(
+                [[21.26, 75.92], [21.32, 76.1]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_0843007523f8060ca12885de93d4d9f8.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4q)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_c279eb33a5bf4d9f026dea2502b1a94f = L.polyline(
+                [[21.24, 75.95], [21.3, 76.05]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_c279eb33a5bf4d9f026dea2502b1a94f.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (F4r)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_4394bbacf80f034dc4872463df7bbbb2 = L.polyline(
+                [[21.09, 76.07], [21.04, 76.3], [21.15, 76.7], [21.2, 77.0], [21.23, 77.2], [21.28, 77.45]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_4394bbacf80f034dc4872463df7bbbb2.bindTooltip(
+                `<div>
+                     <b>Gavligarh fault (F9a)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_e5da412171efd6624d5357d967d784c0 = L.polyline(
+                [[21.38, 77.4], [21.28, 77.49]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_e5da412171efd6624d5357d967d784c0.bindTooltip(
+                `<div>
+                     <b>Gavligarh fault (F9b)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_f9f78b99ee4df151fb03b521a4fe83f2 = L.polyline(
+                [[21.3, 77.45], [21.28, 77.7], [21.3, 77.95]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_f9f78b99ee4df151fb03b521a4fe83f2.bindTooltip(
+                `<div>
+                     <b>Gavligarh fault (F9c)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_67874b1bb1fcc49397acc4f43faf2b19 = L.polyline(
+                [[21.45, 78.0], [21.65, 78.4], [21.9, 79.0], [22.0, 79.2], [22.2, 79.5], [22.8, 78.1], [22.9, 78.5], [23.0, 78.75], [23.05, 78.9], [22.0, 78.0], [22.05, 78.3], [22.1, 78.7], [22.15, 79.0], [22.18, 79.05]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_67874b1bb1fcc49397acc4f43faf2b19.bindTooltip(
+                `<div>
+                     <b>GAVLIGARH FAULT (9d)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_544c5e5125f03eaccc0a1a26f41ed88a = L.polyline(
+                [[22.55, 78.0], [22.6, 78.5], [22.75, 79.0], [22.8, 79.45], [23.0, 79.7], [23.1, 79.9], [23.05, 78.9], [23.1, 79.0], [23.1, 79.1], [23.15, 79.3], [23.3, 79.5], [23.65, 80.0], [23.72, 80.15], [23.74, 80.2], [23.8, 80.4], [23.75, 80.4], [23.88, 80.55], [23.9, 80.8], [23.92, 81.0], [23.3, 79.85], [23.1, 79.95], [22.9, 80.1], [22.7, 80.25]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_544c5e5125f03eaccc0a1a26f41ed88a.bindTooltip(
+                `<div>
+                     <b>SON NARMADA FAULT (5g)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_c60b30d53850927e896c680144187630 = L.polyline(
+                [[23.2, 80.0], [23.3, 80.3], [23.5, 80.5], [22.95, 79.58], [23.0, 79.63], [23.15, 79.9]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_c60b30d53850927e896c680144187630.bindTooltip(
+                `<div>
+                     <b>SON NARMADA FAULT (5h)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_7a56825bc0dfb5a5b5ccf30a31173a18 = L.polyline(
+                [[23.52, 80.51], [23.6, 80.6], [23.17, 79.95], [23.2, 80.0], [23.36, 80.35], [23.55, 80.65]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_7a56825bc0dfb5a5b5ccf30a31173a18.bindTooltip(
+                `<div>
+                     <b>SON NARMADA FAULT (5i)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_5bf91894dd506d35b581ca2b8b3c42e2 = L.polyline(
+                [[23.61, 80.62], [23.7, 80.89], [21.95, 79.25], [22.0, 79.3], [22.05, 79.42], [22.1, 79.6]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_5bf91894dd506d35b581ca2b8b3c42e2.bindTooltip(
+                `<div>
+                     <b>SON NARMADA FAULT (5j)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_4c029ae4614865552de62275f84b573e = L.polyline(
+                [[22.55, 78.0], [22.61, 78.3], [22.7, 78.7], [22.78, 79.0], [22.8, 79.15], [21.95, 79.4], [22.0, 79.45], [22.08, 79.63]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_4c029ae4614865552de62275f84b573e.bindTooltip(
+                `<div>
+                     <b>SON NARMADA FAULT (5j)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_b1c36d5ae48b37d5ab6c2d7bcd3da31d = L.polyline(
+                [[22.9, 79.53], [23.0, 79.85], [23.05, 79.95], [21.7, 79.2], [22.0, 79.73], [22.15, 79.97]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_b1c36d5ae48b37d5ab6c2d7bcd3da31d.bindTooltip(
+                `<div>
+                     <b>SON NARMADA FAULT (5l)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_f64e4c90202b9a91f66b45878556e54d = L.polyline(
+                [[23.05, 80.0], [23.2, 80.3], [23.38, 80.55], [23.3, 80.45], [21.05, 80.37], [21.28, 80.48]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_f64e4c90202b9a91f66b45878556e54d.bindTooltip(
+                `<div>
+                     <b>SON NARMADA FAULT (5m)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_3bd094b83a577ef98de4749a746559c5 = L.polyline(
+                [[21.1, 78.64], [21.12, 79.0], [21.15, 79.3], [21.13, 79.7], [21.15, 79.85]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_3bd094b83a577ef98de4749a746559c5.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (FIBC15)</b><br>Type: FAULT INVOLVING BASEMENT & COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_dcf29f500ade831841232778bb47c5c0 = L.polyline(
+                [[21.2, 79.15], [21.3, 79.5], [21.5, 79.91]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_dcf29f500ade831841232778bb47c5c0.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (FIBC16)</b><br>Type: FAULT INVOLVING BASEMENT & COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_ff1e44f65fa84d24d2068a11e126db2e = L.polyline(
+                [[21.7, 80.15], [21.8, 80.35]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_ff1e44f65fa84d24d2068a11e126db2e.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (FIBC17)</b><br>Type: FAULT INVOLVING BASEMENT & COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_fea7b8b2391c0cfda216e78573458ef0 = L.polyline(
+                [[21.05, 80.2], [21.2, 80.27], [21.4, 80.28], [21.45, 80.31], [21.62, 80.71], [21.6, 80.8], [21.4, 80.82], [21.2, 80.9], [21.1, 80.85]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_fea7b8b2391c0cfda216e78573458ef0.bindTooltip(
+                `<div>
+                     <b>TAPTI NORTH FAULT (FIBC18)</b><br>Type: FAULT INVOLVING BASEMENT & COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_4e5f7a4d08e4beb8f4170dab7235a6dc = L.polyline(
+                [[20.2, 73.4], [20.08, 74.0], [20.0, 74.25], [19.8, 74.75], [19.65, 75.0], [20.2, 72.85], [20.0, 72.9], [19.75, 73.02]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_4e5f7a4d08e4beb8f4170dab7235a6dc.bindTooltip(
+                `<div>
+                     <b>UPPER GODAVARI FAULT (NTF7)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_8d5d83ebbfd6890a0f11a7485bca9d1b = L.polyline(
+                [[18.05, 73.85], [17.8, 74.0], [17.6, 74.2], [17.3, 74.45], [17.08, 74.52], [19.8, 73.1], [19.1, 73.85]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_8d5d83ebbfd6890a0f11a7485bca9d1b.bindTooltip(
+                `<div>
+                     <b>WARNA FAULT (NTF8)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_7fc5f1666fee177e09d0cb6f78683554 = L.polyline(
+                [[17.05, 73.32], [18.0, 73.2], [19.0, 73.02], [19.15, 73.0], [20.0, 72.85], [20.35, 72.75], [19.78, 73.08], [19.1, 73.8]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_7fc5f1666fee177e09d0cb6f78683554.bindTooltip(
+                `<div>
+                     <b>WEST COAST FAULT (NTF10)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_0f22071532244e38be0c04bc89da6176 = L.polyline(
+                [[18.85, 72.9], [18.8, 73.0], [18.4, 73.2], [18.0, 73.4], [17.7, 73.5], [17.35, 73.65], [17.05, 73.7], [17.95, 73.3], [18.0, 73.5], [18.1, 73.9]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_0f22071532244e38be0c04bc89da6176.bindTooltip(
+                `<div>
+                     <b>CHIPUM FAULT (NTF11)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_f54ea28e936251c6be9b0685275c2808 = L.polyline(
+                [[19.8, 73.2], [19.6, 73.6], [19.25, 74.0], [19.0, 74.25], [18.7, 74.5], [18.3, 74.85], [17.66, 74.02], [18.02, 74.4]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_f54ea28e936251c6be9b0685275c2808.bindTooltip(
+                `<div>
+                     <b>CHIPUM FAULT (NTF12)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_8d72cdbe129a79d9f79ba56647d55045 = L.polyline(
+                [[18.08, 72.2], [17.0, 72.6]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_8d72cdbe129a79d9f79ba56647d55045.bindTooltip(
+                `<div>
+                     <b>CHIPUM FAULT (FIBC24)</b><br>Type: FAULT INVOLVING BASEMENT & COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_13eca15f780172ddcb83fef842ac8f25 = L.polyline(
+                [[18.4, 72.15], [17.0, 72.7]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_13eca15f780172ddcb83fef842ac8f25.bindTooltip(
+                `<div>
+                     <b>CHIPUM FAULT (FIBC25)</b><br>Type: FAULT INVOLVING BASEMENT & COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_c4d4bbbf40da2c2bc115a40746ad8d63 = L.polyline(
+                [[18.6, 72.5], [18.4, 72.6]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_c4d4bbbf40da2c2bc115a40746ad8d63.bindTooltip(
+                `<div>
+                     <b>CHIPUM FAULT (FIBC26)</b><br>Type: FAULT INVOLVING BASEMENT & COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_9c96b90016666e7a185a0b6c5169619b = L.polyline(
+                [[20.9, 73.7], [20.8, 73.7]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_9c96b90016666e7a185a0b6c5169619b.bindTooltip(
+                `<div>
+                     <b>CHIPUM FAULT (FIBC27)</b><br>Type: FAULT INVOLVING BASEMENT & COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_2d6e401439ae808791b137e2e84f6131 = L.polyline(
+                [[19.35, 72.0], [19.0, 72.2], [18.6, 72.4], [18.5, 72.45], [18.0, 72.5], [17.6, 72.7], [17.0, 72.95]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_2d6e401439ae808791b137e2e84f6131.bindTooltip(
+                `<div>
+                     <b>CHIPUM FAULT (FIBC28)</b><br>Type: FAULT INVOLVING BASEMENT & COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_d8e24529f900f75fad4bc5ff17980799 = L.polyline(
+                [[17.35, 72.95], [17.05, 73.1]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_d8e24529f900f75fad4bc5ff17980799.bindTooltip(
+                `<div>
+                     <b>CHIPUM FAULT (FIBC29)</b><br>Type: FAULT INVOLVING BASEMENT & COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_904600cf24e1205f5c3e03841fbf6a09 = L.polyline(
+                [[19.65, 75.0], [19.25, 75.3], [19.0, 75.5], [18.95, 75.55], [20.95, 75.15], [20.9, 75.16]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_904600cf24e1205f5c3e03841fbf6a09.bindTooltip(
+                `<div>
+                     <b>UPPER GODAVARI FAULT (NTF7)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_3dd81b8c5bba35b4298f7cd8c586b26f = L.polyline(
+                [[21.0, 76.2], [20.9, 76.6], [20.85, 77.0], [20.8, 77.2], [20.9, 77.8], [20.9, 75.65], [20.85, 75.75]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_3dd81b8c5bba35b4298f7cd8c586b26f.bindTooltip(
+                `<div>
+                     <b>PURNA FAULT (NTF13)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_318a615370e2d9577b3b56a79bc4a79f = L.polyline(
+                [[20.95, 76.22], [20.7, 76.6], [20.45, 77.0], [20.0, 77.6], [19.85, 77.9], [20.9, 75.7], [20.9, 75.75], [20.92, 75.8]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_318a615370e2d9577b3b56a79bc4a79f.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT (NTF14)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_39fe8dc54c15d12c81c36aef2bf78243 = L.polyline(
+                [[20.7, 76.6], [20.35, 77.0], [20.0, 77.4], [19.8, 77.7], [19.65, 77.95], [20.92, 75.85], [20.9, 75.9]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_39fe8dc54c15d12c81c36aef2bf78243.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT (NTF15)</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_b698a0cff68688f20f47e70ad96b5946 = L.polyline(
+                [[21.0, 75.98], [20.98, 76.03]],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "orange", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_b698a0cff68688f20f47e70ad96b5946.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT (FIC14)</b><br>Type: FAULT INVOLVING COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_a9157bda883e825c11a5f7ef80843956 = L.polyline(
+                [[20.98, 76.0], [20.97, 76.08]],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "orange", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_a9157bda883e825c11a5f7ef80843956.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT (FIC15)</b><br>Type: FAULT INVOLVING COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_3ceabfcd7cd8d01d80c0c80e2693635d = L.polyline(
+                [[20.9, 76.0], [20.9, 76.08]],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "orange", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_3ceabfcd7cd8d01d80c0c80e2693635d.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT (FIC16)</b><br>Type: FAULT INVOLVING COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_50ef8d608f09c8468ed47d5ad5fd1d9e = L.polyline(
+                [[20.89, 75.99], [20.9, 76.15], [20.95, 76.2]],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "orange", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_50ef8d608f09c8468ed47d5ad5fd1d9e.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT (FIC17)</b><br>Type: FAULT INVOLVING COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_cbc654ea4c27f642d9f4164fe67f6a8a = L.polyline(
+                [[20.9, 77.8], [20.92, 77.9]],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "orange", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_cbc654ea4c27f642d9f4164fe67f6a8a.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT (FIC18)</b><br>Type: FAULT INVOLVING COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_63d489540922e5514ec577cc13d12ab4 = L.polyline(
+                [[20.82, 77.8], [20.9, 77.9]],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "orange", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_63d489540922e5514ec577cc13d12ab4.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT (FIC19)</b><br>Type: FAULT INVOLVING COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_0f464fab4602c79796e374ce008c452f = L.polyline(
+                [[20.93, 77.9], [20.88, 77.95]],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "orange", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_0f464fab4602c79796e374ce008c452f.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT (FIC20)</b><br>Type: FAULT INVOLVING COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_363e021a109e4b68ca8358f9c83076d4 = L.polyline(
+                [[20.85, 77.9], [20.86, 77.98]],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "orange", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_363e021a109e4b68ca8358f9c83076d4.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT (FIC21)</b><br>Type: FAULT INVOLVING COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_8f663df70aa3e5e7e9c87d565da9fa0e = L.polyline(
+                [[20.43, 77.5], [20.42, 77.75]],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "orange", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_8f663df70aa3e5e7e9c87d565da9fa0e.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT (FIC22)</b><br>Type: FAULT INVOLVING COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_b65a914e77bb725f783c05e7378bb2df = L.polyline(
+                [[20.3, 77.5], [20.33, 77.65]],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "orange", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_b65a914e77bb725f783c05e7378bb2df.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT (FIC23)</b><br>Type: FAULT INVOLVING COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_7b95174cc1fa1304a92124963c7daacf = L.polyline(
+                [[20.05, 77.7], [20.0, 77.8]],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "orange", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_7b95174cc1fa1304a92124963c7daacf.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT (FIC24)</b><br>Type: FAULT INVOLVING COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_c1da2638308dc22de35b0890ffacdcdd = L.polyline(
+                [[20.1, 77.9], [20.08, 77.98]],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "orange", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_c1da2638308dc22de35b0890ffacdcdd.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT (FIC25)</b><br>Type: FAULT INVOLVING COVER
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_237d228560bc2410e2b704adc1854f85 = L.polyline(
+                [[19.7, 78.0], [19.0, 79.0], [18.8, 79.4], [20.7, 79.7], [20.55, 79.8]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_237d228560bc2410e2b704adc1854f85.bindTooltip(
+                `<div>
+                     <b>KADDAM FAULT</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_3b108cdcd4757310dc7e7816b11fbb1c = L.polyline(
+                [[18.7, 79.3], [18.4, 79.75], [18.0, 80.2], [17.7, 80.7], [17.35, 80.99]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_3b108cdcd4757310dc7e7816b11fbb1c.bindTooltip(
+                `<div>
+                     <b>KINNERASANI FAULT</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_d471d07786c35a14d84175e3cef4bc82 = L.polyline(
+                [[18.0, 80.2], [17.5, 80.6], [17.01, 80.9]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_d471d07786c35a14d84175e3cef4bc82.bindTooltip(
+                `<div>
+                     <b>KOLLERU FAULT</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_160e1f1c607c32634399e94218981bdb = L.polyline(
+                [[18.75, 80.25], [18.45, 80.6], [18.0, 80.85], [17.8, 80.95]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_64168e2207fca411e8bee6e58be36670);
+        
+    
+            poly_line_160e1f1c607c32634399e94218981bdb.bindTooltip(
+                `<div>
+                     <b>GODAVARI VALLEY FAULT</b><br>Type: NEOTECTONIC FAULT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+</script>
+</html>

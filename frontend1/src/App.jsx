@@ -1,207 +1,3 @@
-// import { useState } from 'react';
-// import axios from 'axios';
-// import { Activity, MapPin, Download, Table, BarChart3 } from 'lucide-react';
-
-// const App = () => {
-//   const [loading, setLoading] = useState(false);
-//   const [report, setReport] = useState(null);
-//   const [formData, setFormData] = useState({ lat: '21.8', lon: '75.6' });
-
-//   const API_URL = "http://127.0.0.1:5000/analyze";
-
-//   const handleAnalyze = async (e) => {
-//     e.preventDefault();
-//     setLoading(true);
-
-//     try {
-//       const response = await axios.post(API_URL, {
-//         latitude: parseFloat(formData.lat),
-//         longitude: parseFloat(formData.lon)
-//       });
-
-//       if (response.data.status === "success") {
-//         setReport(response.data);
-//       } else {
-//         alert("Error: " + response.data.message);
-//       }
-//     } catch (error) {
-//       alert("Could not connect to Flask server. Make sure it's running on port 5000.");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   if (report) return <ReportView data={report} onReset={() => setReport(null)} />;
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-6 relative overflow-hidden">
-//       {/* Background Pattern */}
-//       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNnoiIHN0cm9rZT0iIzFmMmEzZSIgb3BhY2l0eT0iLjIiLz48L2c+PC9zdmc+')] opacity-30"></div>
-
-//       <div className="max-w-xl w-full relative z-10">
-//         <header className="text-center mb-12">
-//           <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl mb-6 shadow-2xl shadow-blue-500/50">
-//             <Activity className="text-white" size={40} strokeWidth={2.5} />
-//           </div>
-//           <h1 className="text-5xl font-black text-white mb-3 tracking-tight">
-//             SEISMIC ANALYZER
-//           </h1>
-//           <p className="text-blue-200 text-lg">Advanced earthquake data analysis platform</p>
-//         </header>
-
-//         <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-10 shadow-2xl border border-white/20">
-//           <div className="flex items-center gap-3 mb-6 pb-6 border-b border-gray-200">
-//             <MapPin className="text-blue-600" size={24} />
-//             <div>
-//               <h2 className="text-lg font-bold text-gray-900">Location Coordinates</h2>
-//               <p className="text-sm text-gray-500">Enter precise latitude and longitude values</p>
-//             </div>
-//           </div>
-
-//           <form onSubmit={handleAnalyze} className="space-y-6">
-//             <div className="grid grid-cols-2 gap-6">
-//               <div className="flex flex-col">
-//                 <label className="text-sm font-bold mb-2 text-gray-700 uppercase tracking-wide">Latitude</label>
-//                 <input
-//                   type="number" step="any" value={formData.lat} required
-//                   className="p-4 rounded-xl border-2 border-gray-200 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all bg-gray-50 font-semibold text-gray-900"
-//                   onChange={(e) => setFormData({ ...formData, lat: e.target.value })}
-//                 />
-//               </div>
-//               <div className="flex flex-col">
-//                 <label className="text-sm font-bold mb-2 text-gray-700 uppercase tracking-wide">Longitude</label>
-//                 <input
-//                   type="number" step="any" value={formData.lon} required
-//                   className="p-4 rounded-xl border-2 border-gray-200 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all bg-gray-50 font-semibold text-gray-900"
-//                   onChange={(e) => setFormData({ ...formData, lon: e.target.value })}
-//                 />
-//               </div>
-//             </div>
-
-//             <button
-//               disabled={loading}
-//               className="w-full py-5 rounded-xl text-white bg-gradient-to-r from-blue-600 to-cyan-500 text-lg font-bold hover:from-blue-700 hover:to-cyan-600 transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
-//             >
-//               {loading ? (
-//                 <span className="flex items-center justify-center gap-2">
-//                   <Activity className="animate-spin" size={20} />
-//                   Running Analysis...
-//                 </span>
-//               ) : (
-//                 "Start Analysis"
-//               )}
-//             </button>
-//           </form>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// const ReportView = ({ data, onReset }) => {
-//   return (
-//     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-8">
-//       <div className="max-w-7xl mx-auto space-y-8">
-//         <div className="flex justify-between items-center">
-//           <div>
-//             <h2 className="text-4xl font-black text-gray-900 mb-2">Analysis Results</h2>
-//             <p className="text-gray-600">Comprehensive seismic data report</p>
-//           </div>
-//           <button
-//             onClick={onReset}
-//             className="px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 font-bold rounded-xl hover:border-blue-500 hover:text-blue-600 hover:shadow-lg transition-all transform hover:scale-105"
-//           >
-//             ← New Analysis
-//           </button>
-//         </div>
-
-//         <div className="grid md:grid-cols-4 gap-6">
-//           <StatCard label="A-Value" value={data.a_value} />
-//           <StatCard label="B-Value" value={data.b_value} />
-//           <StatCard label="R²" value={data.r2} />
-//           <StatCard label="Total EQ" value={data.number_of_earthquakes} />
-//         </div>
-
-//         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-//           <div className="lg:col-span-2 bg-gradient-to-br from-slate-900 to-blue-900 p-8 rounded-3xl shadow-2xl">
-//             <div className="flex justify-between items-center mb-6">
-//               <h3 className="font-bold text-2xl flex items-center gap-3 text-white">
-//                 <BarChart3 className="text-cyan-400" size={28} /> Gutenberg–Richter Relation
-//               </h3>
-//               <span className="text-xs bg-white/10 px-4 py-2 rounded-full text-blue-200 font-bold tracking-wide backdrop-blur-sm">
-//                 LOG10(N) vs MAGNITUDE
-//               </span>
-//             </div>
-
-//             <div className="bg-slate-950/50 backdrop-blur-sm rounded-2xl p-6 border border-white/10 flex justify-center items-center min-h-[450px]">
-//               {data.graph ? (
-//                 <img
-//                   src={`data:image/png;base64,${data.graph}`}
-//                   alt="Seismic Analysis Graph"
-//                   className="max-w-full h-auto rounded-xl shadow-2xl"
-//                 />
-//               ) : (
-//                 <div className="flex flex-col items-center gap-4 text-slate-400">
-//                   <Activity className="animate-pulse" size={56} />
-//                   <p className="font-semibold text-lg">Processing Visual Data...</p>
-//                 </div>
-//               )}
-//             </div>
-//           </div>
-
-//           <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-200">
-//             <h3 className="font-bold text-xl mb-6 flex items-center gap-3 text-gray-900">
-//               <Table size={24} className="text-blue-600" /> Fault Data Preview
-//             </h3>
-//             <div className="overflow-x-auto">
-//               <table className="w-full text-left border-collapse">
-//                 <thead>
-//                   <tr className="border-b-2 border-gray-300">
-//                     {data.fault_preview && data.fault_preview.length > 0 && Object.keys(data.fault_preview[0]).map(key => (
-//                       <th key={key} className="p-3 text-xs font-black uppercase text-gray-600 tracking-wider">{key}</th>
-//                     ))}
-//                   </tr>
-//                 </thead>
-//                 <tbody>
-//                   {data.fault_preview && data.fault_preview.map((row, i) => (
-//                     <tr key={i} className="border-b border-gray-200 hover:bg-blue-50 transition-colors">
-//                       {Object.values(row).map((val, j) => (
-//                         <td key={j} className="p-3 text-sm font-medium text-gray-700">
-//                           {typeof val === 'number' ? val.toFixed(3) : String(val)}
-//                         </td>
-//                       ))}
-//                     </tr>
-//                   ))}
-//                 </tbody>
-//               </table>
-//             </div>
-//           </div>
-//         </div>
-
-//         <div className="flex justify-center">
-//           <a
-//             href={data.download_excel}
-//             className="inline-flex items-center gap-3 px-8 py-5 bg-gradient-to-r from-green-600 to-emerald-500 text-white rounded-2xl font-bold text-lg hover:from-green-700 hover:to-emerald-600 shadow-xl shadow-green-500/30 hover:shadow-2xl hover:shadow-green-500/40 transition-all transform hover:scale-105 active:scale-95"
-//           >
-//             <Download size={24} /> Download Full Excel Report
-//           </a>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// const StatCard = ({ label, value }) => (
-//   <div className="bg-white p-8 rounded-2xl shadow-lg text-center border-2 border-gray-200 hover:border-blue-500 hover:shadow-xl transition-all transform hover:scale-105 group">
-//     <p className="text-gray-600 text-xs uppercase font-black tracking-wider mb-2">{label}</p>
-//     <p className="text-4xl font-black bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent group-hover:from-blue-700 group-hover:to-cyan-600 transition-all">
-//       {value}
-//     </p>
-//   </div>
-// );
-
-// export default App;
-
 import { useState, useRef } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -209,71 +5,189 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   Activity, MapPin, Download, BarChart3, Upload,
   FileSpreadsheet, Layers, GitBranch, Zap, TrendingDown,
-  Table2, AlertTriangle, ChevronRight, X
+  Table2, AlertTriangle, ChevronRight, X, Map
 } from 'lucide-react';
 
 const API_URL = "http://127.0.0.1:5000/analyze";
+const MAP_URL = "http://127.0.0.1:5000/map";
 
 // ─── Sidebar nav items — each maps to a key in the response ──────────────────
 const NAV_SECTIONS = [
-  { key: "overview", label: "Overview", icon: BarChart3, desc: "Key stats & GR curve" },
-  { key: "gr_curve", label: "GR Curve", icon: TrendingDown, desc: "Gutenberg–Richter plot" },
-  { key: "compiled", label: "Compiled catalog", icon: Table2, desc: "Raw deduplicated events" },
-  { key: "filtered", label: "Filtered catalog", icon: Layers, desc: "Events after fault filter" },
-  { key: "declustered", label: "Declustered catalog", icon: GitBranch, desc: "Mainshocks only" },
-  { key: "yearly_mag", label: "Yearly magnitude", icon: Table2, desc: "Event count per year/band" },
-  { key: "cumulative", label: "Cumulative counts", icon: Table2, desc: "Cumulative G-R table" },
-  { key: "ab_table", label: "A-B PSHA table", icon: Table2, desc: "logN vs magnitude" },
-  { key: "completeness", label: "Completeness", icon: Table2, desc: "Stepp completeness table" },
-  { key: "faults", label: "Fault metrics", icon: GitBranch, desc: "Fault lengths, weights, α" },
-  { key: "psha_summary", label: "PSHA summary", icon: Zap, desc: "µ(z) vs PGA table" },
-  { key: "mare", label: "MARE table", icon: Zap, desc: "Return period PGA values" },
-  { key: "hazard_curve", label: "Hazard curve", icon: TrendingDown, desc: "PGA exceedance curve" },
+  { key: "overview",     label: "Overview",          icon: BarChart3,    desc: "Key stats & GR curve" },
+  { key: "gr_curve",     label: "GR Curve",          icon: TrendingDown, desc: "Gutenberg–Richter plot" },
+  { key: "compiled",     label: "Compiled catalog",  icon: Table2,       desc: "Raw deduplicated events" },
+  { key: "filtered",     label: "Filtered catalog",  icon: Layers,       desc: "Events after fault filter" },
+  { key: "declustered",  label: "Declustered",       icon: GitBranch,    desc: "Mainshocks only" },
+  { key: "yearly_mag",   label: "Yearly magnitude",  icon: Table2,       desc: "Event count per year/band" },
+  { key: "cumulative",   label: "Cumulative counts", icon: Table2,       desc: "Cumulative G-R table" },
+  { key: "ab_table",     label: "A-B PSHA table",    icon: Table2,       desc: "logN vs magnitude" },
+  { key: "completeness", label: "Completeness",      icon: Table2,       desc: "Stepp completeness table" },
+  { key: "faults",       label: "Fault metrics",     icon: GitBranch,    desc: "Fault lengths, weights, α" },
+  { key: "psha_summary", label: "PSHA summary",      icon: Zap,          desc: "µ(z) vs PGA table" },
+  { key: "mare",         label: "MARE table",        icon: Zap,          desc: "Return period PGA values" },
+  { key: "hazard_curve", label: "Hazard curve",      icon: TrendingDown, desc: "PGA exceedance curve" },
 ];
 
 // ─── Root ─────────────────────────────────────────────────────────────────────
 export default function App() {
+  // "home" | "map" | "report"
+  const [view, setView]     = useState('home');
   const [report, setReport] = useState(null);
-  if (report) return (
-    <>
-      <ReportView data={report} onReset={() => setReport(null)} />
-      <ToastContainer
-        position="bottom-right"
-        autoClose={4000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-    </>
-  );
+
+  if (view === 'map') {
+    return (
+      <>
+        <FaultMapView onBack={() => setView('home')} />
+        <ToastContainer position="bottom-right" autoClose={4000} theme="light" />
+      </>
+    );
+  }
+
+  if (view === 'report' && report) {
+    return (
+      <>
+        <ReportView data={report} onReset={() => { setReport(null); setView('home'); }} />
+        <ToastContainer position="bottom-right" autoClose={4000} theme="light" />
+      </>
+    );
+  }
+
   return (
     <>
-      <InputView onSuccess={setReport} />
-      <ToastContainer
-        position="bottom-right"
-        autoClose={4000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
+      <InputView
+        onSuccess={(data) => { setReport(data); setView('report'); }}
+        onShowMap={() => setView('map')}
       />
+      <ToastContainer position="bottom-right" autoClose={4000} theme="light" />
     </>
   );
 }
 
+// ─── India Fault Map full-screen view ────────────────────────────────────────
+function FaultMapView({ onBack }) {
+  const [loading, setLoading] = useState(true);
+  const [error,   setError]   = useState(false);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#0f172a' }}>
+      {/* Top bar */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 14,
+        padding: '12px 20px', background: '#0f172a',
+        borderBottom: '1px solid #1e293b', flexShrink: 0
+      }}>
+        <button
+          onClick={onBack}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            background: '#1e293b', border: 'none', borderRadius: 8,
+            color: '#94a3b8', fontSize: 13, fontWeight: 500,
+            padding: '7px 14px', cursor: 'pointer'
+          }}
+        >
+          ← Back
+        </button>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{
+            width: 32, height: 32, borderRadius: 8,
+            background: 'linear-gradient(135deg,#3b82f6,#06b6d4)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center'
+          }}>
+            <Map color="white" size={16} />
+          </div>
+          <div>
+            <div style={{ color: 'white', fontSize: 14, fontWeight: 700, lineHeight: 1.2 }}>
+              India Fault Map
+            </div>
+            <div style={{ color: '#475569', fontSize: 11 }}>
+              Interactive — hover faults to view details
+            </div>
+          </div>
+        </div>
+
+        {/* Legend */}
+        <div style={{
+          marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 16,
+          background: '#1e293b', borderRadius: 10, padding: '7px 16px'
+        }}>
+          {[
+            { color: '#ef4444', label: 'Neotectonic' },
+            { color: '#f97316', label: 'Cover' },
+            { color: '#3b82f6', label: 'Basement & Cover' },
+            { color: '#6b7280', label: 'Sub-surface' },
+          ].map(({ color, label }) => (
+            <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 20, height: 3, background: color, borderRadius: 2 }} />
+              <span style={{ fontSize: 11, color: '#94a3b8', whiteSpace: 'nowrap' }}>{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Map iframe */}
+      <div style={{ flex: 1, position: 'relative' }}>
+        {loading && !error && (
+          <div style={{
+            position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            background: '#0f172a', zIndex: 10, gap: 16
+          }}>
+            <div style={{
+              width: 48, height: 48, borderRadius: '50%',
+              border: '3px solid #1e293b', borderTopColor: '#3b82f6',
+              animation: 'spin 0.8s linear infinite'
+            }} />
+            <p style={{ color: '#64748b', fontSize: 14, margin: 0 }}>Loading fault map…</p>
+          </div>
+        )}
+
+        {error && (
+          <div style={{
+            position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            background: '#0f172a', zIndex: 10, gap: 12, padding: 32, textAlign: 'center'
+          }}>
+            <AlertTriangle size={40} color="#f59e0b" />
+            <p style={{ color: '#e2e8f0', fontSize: 16, fontWeight: 600, margin: 0 }}>
+              Map not available
+            </p>
+            <p style={{ color: '#64748b', fontSize: 13, margin: 0, maxWidth: 420 }}>
+              Make sure your Flask server is running on port 5000 and that you have generated
+              the map by running <code style={{ background: '#1e293b', padding: '2px 6px', borderRadius: 4, color: '#60a5fa' }}>plotMap.py</code> first.
+            </p>
+            <button
+              onClick={() => { setError(false); setLoading(true); }}
+              style={{
+                marginTop: 8, padding: '9px 20px', background: '#2563eb',
+                color: 'white', border: 'none', borderRadius: 8,
+                fontSize: 13, fontWeight: 600, cursor: 'pointer'
+              }}
+            >
+              Retry
+            </button>
+          </div>
+        )}
+
+        <iframe
+          key={loading}          // remounts on retry
+          src={MAP_URL}
+          title="India Fault Map"
+          style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+          onLoad={() => setLoading(false)}
+          onError={() => { setLoading(false); setError(true); }}
+        />
+      </div>
+
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
+}
+
 // ─── Input form ───────────────────────────────────────────────────────────────
-function InputView({ onSuccess }) {
-  const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState(null);
+function InputView({ onSuccess, onShowMap }) {
+  const [loading,  setLoading]  = useState(false);
+  const [file,     setFile]     = useState(null);
   const [dragOver, setDragOver] = useState(false);
   const [form, setForm] = useState({
     lat: '', lon: '', radius: '300', decluster: '50', buffer: '15',
@@ -282,133 +196,64 @@ function InputView({ onSuccess }) {
   const fileRef = useRef();
 
   const handleFile = (f) => {
-    if (f) {
-      if (f.name.endsWith('.xlsx') || f.name.endsWith('.xls')) {
-        if (f.size > 50 * 1024 * 1024) {
-          toast.error('File is too large. Maximum size is 50MB.', {
-            icon: '📁',
-            autoClose: 4000
-          });
-          return;
-        }
-        setFile(f);
-        toast.success(`File selected: ${f.name}`, {
-          icon: '✅',
-          autoClose: 2000
-        });
-      } else {
-        toast.error('Please upload an Excel file (.xlsx or .xls)', {
-          icon: '📁',
-          autoClose: 4000
-        });
+    if (!f) return;
+    if (f.name.endsWith('.xlsx') || f.name.endsWith('.xls')) {
+      if (f.size > 50 * 1024 * 1024) {
+        toast.error('File is too large. Maximum size is 50 MB.', { icon: '📁' });
+        return;
       }
+      setFile(f);
+      toast.success(`File selected: ${f.name}`, { icon: '✅', autoClose: 2000 });
+    } else {
+      toast.error('Please upload an Excel file (.xlsx or .xls)', { icon: '📁' });
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file) {
-      toast.error('Please upload your earthquake Excel file.', {
-        position: 'top-center',
-        icon: '📁'
-      });
+      toast.error('Please upload your earthquake Excel file.', { position: 'top-center', icon: '📁' });
       return;
     }
     setLoading(true);
     const fd = new FormData();
     fd.append('file', file);
-    fd.append('latitude', parseFloat(form.lat));
-    fd.append('longitude', parseFloat(form.lon));
-    fd.append('radius', parseFloat(form.radius));
+    fd.append('latitude',    parseFloat(form.lat));
+    fd.append('longitude',   parseFloat(form.lon));
+    fd.append('radius',      parseFloat(form.radius));
     fd.append('decluster_km', parseFloat(form.decluster));
-    fd.append('buffer_km', parseFloat(form.buffer));
-    fd.append('x_coord', parseFloat(form.x_coord || form.lat));
-    fd.append('y_coord', parseFloat(form.y_coord || form.lon));
-    fd.append('start_year', parseInt(form.start_year));
+    fd.append('buffer_km',   parseFloat(form.buffer));
+    fd.append('x_coord',     parseFloat(form.x_coord || form.lat));
+    fd.append('y_coord',     parseFloat(form.y_coord || form.lon));
+    fd.append('start_year',  parseInt(form.start_year));
 
     let loadingToastId = null;
     try {
-      // Show loading toast and store its ID
-      loadingToastId = toast.loading('🔄 Running analysis... (This may take a few minutes)', {
-        position: 'bottom-right'
-      });
-
+      loadingToastId = toast.loading('🔄 Running analysis… (this may take a few minutes)', { position: 'bottom-right' });
       const res = await axios.post(API_URL, fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
-        timeout: 600000  // 10 minutes - seismic analysis is computationally intensive
+        timeout: 600000
       });
-
-      // Dismiss loading toast if it exists
-      if (loadingToastId !== null) {
-        toast.dismiss(loadingToastId);
-      }
+      toast.dismiss(loadingToastId);
 
       if (res.data.status === 'success') {
-        toast.success('✅ Analysis completed successfully!', {
-          autoClose: 3000,
-          position: 'bottom-right'
-        });
+        toast.success('✅ Analysis completed successfully!', { autoClose: 3000 });
         onSuccess(res.data);
       } else {
-        const errorMsg = res.data.message || 'Unknown error occurred';
-        const errorType = res.data.type || 'error';
-
-        let displayMsg = errorMsg;
-        let icon = '⚠️';
-
-        if (errorType === 'column_error') {
-          icon = '📋';
-          displayMsg = `Missing Columns:\n${errorMsg}`;
-        } else if (errorType === 'file_error') {
-          icon = '📁';
-          displayMsg = `File Error: ${errorMsg}`;
-        } else if (errorType === 'parameter_error') {
-          icon = '⚙️';
-          displayMsg = `Parameter Error: ${errorMsg}`;
-        } else if (errorType === 'data_error') {
-          icon = '📊';
-          displayMsg = `Data Error: ${errorMsg}`;
-        } else if (errorType === 'analysis_error') {
-          icon = '❌';
-          displayMsg = `Analysis Error: ${errorMsg}`;
-        }
-
-        toast.error(displayMsg, {
-          icon,
-          autoClose: 5000,
-          position: 'top-center'
-        });
+        const errorMsg  = res.data.message  || 'Unknown error occurred';
+        const errorType = res.data.type     || 'error';
+        const icons = { column_error: '📋', file_error: '📁', parameter_error: '⚙️', data_error: '📊', analysis_error: '❌' };
+        toast.error(errorMsg, { icon: icons[errorType] || '⚠️', autoClose: 5000, position: 'top-center' });
       }
     } catch (error) {
-      // Dismiss loading toast if it exists
-      if (loadingToastId !== null) {
-        toast.dismiss(loadingToastId);
-      }
-
-      let errorMsg = 'Could not connect to Flask server. Make sure it is running on port 5000.';
+      toast.dismiss(loadingToastId);
+      let msg  = 'Could not connect to Flask server. Make sure it is running on port 5000.';
       let icon = '🔌';
-
-      if (error.response?.status === 400) {
-        const data = error.response.data;
-        errorMsg = data.message || 'Bad request - check your input parameters';
-        icon = '⚠️';
-      } else if (error.response?.status === 500) {
-        const data = error.response.data;
-        errorMsg = data.message || 'Server error - please check the backend logs';
-        icon = '❌';
-      } else if (error.code === 'ECONNABORTED') {
-        errorMsg = 'Request timeout - Analysis took too long. Try reducing the radius or buffer distance to speed things up.';
-        icon = '⏱️';
-      } else if (error.message === 'Network Error') {
-        errorMsg = 'Network error - check your internet connection';
-        icon = '📡';
-      }
-
-      toast.error(errorMsg, {
-        icon,
-        autoClose: 5000,
-        position: 'top-center'
-      });
+      if (error.response?.status === 400) { msg = error.response.data.message || 'Bad request'; icon = '⚠️'; }
+      else if (error.response?.status === 500) { msg = error.response.data.message || 'Server error'; icon = '❌'; }
+      else if (error.code === 'ECONNABORTED') { msg = 'Request timed out. Try reducing radius or buffer distance.'; icon = '⏱️'; }
+      else if (error.message === 'Network Error') { msg = 'Network error — check your connection.'; icon = '📡'; }
+      toast.error(msg, { icon, autoClose: 5000, position: 'top-center' });
     } finally {
       setLoading(false);
     }
@@ -421,8 +266,7 @@ function InputView({ onSuccess }) {
       </label>
       <input
         type="number" step="any" required={opts.required !== false}
-        value={form[key]}
-        placeholder={opts.placeholder || ''}
+        value={form[key]} placeholder={opts.placeholder || ''}
         style={{
           padding: '10px 12px', borderRadius: 8, border: '1.5px solid #e2e8f0',
           fontSize: 14, fontWeight: 500, color: '#0f172a', background: '#f8fafc',
@@ -440,8 +284,9 @@ function InputView({ onSuccess }) {
       display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24
     }}>
       <div style={{ maxWidth: 640, width: '100%' }}>
+
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+        <div style={{ textAlign: 'center', marginBottom: 36 }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             width: 72, height: 72, background: 'linear-gradient(135deg,#3b82f6,#06b6d4)',
@@ -452,16 +297,30 @@ function InputView({ onSuccess }) {
           <h1 style={{ color: 'white', fontSize: 36, fontWeight: 800, margin: '0 0 8px', letterSpacing: '-0.02em' }}>
             Seismic Analyzer
           </h1>
-          <p style={{ color: '#93c5fd', fontSize: 15, margin: 0 }}>
+          <p style={{ color: '#93c5fd', fontSize: 15, margin: '0 0 20px' }}>
             Earthquake PSHA &amp; hazard analysis platform
           </p>
+
+          {/* ── View Fault Map button ── */}
+          <button
+            onClick={onShowMap}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              padding: '10px 22px', borderRadius: 10, border: '1.5px solid #334155',
+              background: 'rgba(255,255,255,0.05)', color: '#93c5fd',
+              fontSize: 13, fontWeight: 600, cursor: 'pointer', backdropFilter: 'blur(4px)',
+              transition: 'all 0.2s'
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(59,130,246,0.15)'; e.currentTarget.style.borderColor = '#3b82f6'; }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.borderColor = '#334155'; }}
+          >
+            <Map size={15} />
+            View India Fault Map
+          </button>
         </div>
 
         {/* Card */}
-        <div style={{
-          background: 'white', borderRadius: 24, padding: 36,
-          boxShadow: '0 25px 60px rgba(0,0,0,0.35)'
-        }}>
+        <div style={{ background: 'white', borderRadius: 24, padding: 36, boxShadow: '0 25px 60px rgba(0,0,0,0.35)' }}>
 
           {/* File upload */}
           <div style={{ marginBottom: 28 }}>
@@ -476,8 +335,7 @@ function InputView({ onSuccess }) {
               style={{
                 border: `2px dashed ${dragOver ? '#3b82f6' : file ? '#22c55e' : '#cbd5e1'}`,
                 borderRadius: 12, padding: '24px 16px', textAlign: 'center', cursor: 'pointer',
-                background: dragOver ? '#eff6ff' : file ? '#f0fdf4' : '#f8fafc',
-                transition: 'all 0.2s'
+                background: dragOver ? '#eff6ff' : file ? '#f0fdf4' : '#f8fafc', transition: 'all 0.2s'
               }}
             >
               <input ref={fileRef} type="file" accept=".xlsx,.xls" style={{ display: 'none' }}
@@ -497,46 +355,33 @@ function InputView({ onSuccess }) {
                   <p style={{ margin: 0, fontSize: 14, color: '#64748b' }}>
                     Drop your <strong>.xlsx</strong> file here or <span style={{ color: '#3b82f6' }}>browse</span>
                   </p>
-                  <p style={{ margin: '4px 0 0', fontSize: 12, color: '#94a3b8' }}>Must contain columns: year, month, date, hours, minutes, latitude, longitude, magnitude, mag type</p>
+                  <p style={{ margin: '4px 0 0', fontSize: 12, color: '#94a3b8' }}>
+                    Must contain: year, month, date, hours, minutes, latitude, longitude, magnitude, mag type
+                  </p>
                 </div>
               )}
             </div>
           </div>
 
           <form onSubmit={handleSubmit}>
-            {/* Divider */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-              <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#64748b', fontSize: 12, fontWeight: 500 }}>
-                <MapPin size={14} /> Site coordinates
-              </div>
-              <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
-            </div>
+            <Divider icon={<MapPin size={14} />} label="Site coordinates" />
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
-              {F('lat', 'Center latitude', { required: true, placeholder: 'e.g. 22.62' })}
+              {F('lat', 'Center latitude',  { required: true, placeholder: 'e.g. 22.62' })}
               {F('lon', 'Center longitude', { required: true, placeholder: 'e.g. 75.69' })}
             </div>
-
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 20 }}>
-              {F('radius', 'Radius (km)', { placeholder: '300' })}
-              {F('decluster', 'Decluster (km)', { placeholder: '50' })}
-              {F('buffer', 'Fault buffer (km)', { placeholder: '15' })}
+              {F('radius',   'Radius (km)',      { placeholder: '300' })}
+              {F('decluster','Decluster (km)',   { placeholder: '50' })}
+              {F('buffer',   'Fault buffer (km)',{ placeholder: '15' })}
             </div>
 
-            {/* PSHA site divider */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-              <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#64748b', fontSize: 12, fontWeight: 500 }}>
-                <Zap size={14} /> PSHA site point (x_coord / y_coord)
-              </div>
-              <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
-            </div>
+            <Divider icon={<Zap size={14} />} label="PSHA site point (x_coord / y_coord)" />
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 28 }}>
-              {F('x_coord', 'Site latitude', { required: false, placeholder: 'defaults to center lat', hint: 'Leave blank to use center lat' })}
-              {F('y_coord', 'Site longitude', { required: false, placeholder: 'defaults to center lon', hint: 'Leave blank to use center lon' })}
-              {F('start_year', 'End year', { placeholder: '2020', hint: 'Year analysis ends at' })}
+              {F('x_coord',    'Site latitude',  { required: false, placeholder: 'defaults to center lat', hint: 'Leave blank to use center lat' })}
+              {F('y_coord',    'Site longitude', { required: false, placeholder: 'defaults to center lon', hint: 'Leave blank to use center lon' })}
+              {F('start_year', 'End year',       { placeholder: '2020', hint: 'Year analysis ends at' })}
             </div>
 
             <button
@@ -544,11 +389,15 @@ function InputView({ onSuccess }) {
               style={{
                 width: '100%', padding: '14px 0', borderRadius: 12, border: 'none',
                 background: loading ? '#94a3b8' : 'linear-gradient(135deg,#2563eb,#0891b2)',
-                color: 'white', fontSize: 15, fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer',
+                color: 'white', fontSize: 15, fontWeight: 700,
+                cursor: loading ? 'not-allowed' : 'pointer',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8
               }}
             >
-              {loading ? <><Activity size={18} style={{ animation: 'spin 1s linear infinite' }} /> Running analysis…</> : 'Run analysis'}
+              {loading
+                ? <><Activity size={18} style={{ animation: 'spin 1s linear infinite' }} /> Running analysis…</>
+                : 'Run analysis'
+              }
             </button>
           </form>
         </div>
@@ -558,9 +407,22 @@ function InputView({ onSuccess }) {
   );
 }
 
+function Divider({ icon, label }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+      <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#64748b', fontSize: 12, fontWeight: 500 }}>
+        {icon} {label}
+      </div>
+      <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
+    </div>
+  );
+}
+
 // ─── Report view with sidebar ─────────────────────────────────────────────────
 function ReportView({ data, onReset }) {
   const [active, setActive] = useState('overview');
+  const [mapOpen, setMapOpen] = useState(false);
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#f1f5f9' }}>
@@ -587,8 +449,28 @@ function ReportView({ data, onReset }) {
           </div>
         </div>
 
+        {/* ── Fault Map button in sidebar ── */}
+        <div style={{ padding: '12px 10px 0' }}>
+          <button
+            onClick={() => setMapOpen(true)}
+            style={{
+              width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+              padding: '9px 10px', borderRadius: 8, border: 'none', cursor: 'pointer',
+              background: '#1e3a5f', marginBottom: 4, textAlign: 'left',
+            }}
+          >
+            <Map size={15} color="#60a5fa" style={{ flexShrink: 0 }} />
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', lineHeight: 1.3 }}>
+                India Fault Map
+              </div>
+              <div style={{ fontSize: 10, color: '#475569', lineHeight: 1.2 }}>Interactive fault viewer</div>
+            </div>
+          </button>
+        </div>
+
         {/* Nav */}
-        <nav style={{ flex: 1, padding: '12px 10px' }}>
+        <nav style={{ flex: 1, padding: '8px 10px' }}>
           {NAV_SECTIONS.map(({ key, label, icon: Icon, desc }) => {
             const isActive = active === key;
             return (
@@ -638,6 +520,70 @@ function ReportView({ data, onReset }) {
       <main style={{ flex: 1, padding: 32, overflowX: 'auto' }}>
         <PanelContent section={active} data={data} />
       </main>
+
+      {/* ── Fault Map modal overlay ── */}
+      {mapOpen && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 1000,
+          background: 'rgba(0,0,0,0.7)', display: 'flex', flexDirection: 'column'
+        }}>
+          {/* Modal header */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 14, padding: '12px 20px',
+            background: '#0f172a', borderBottom: '1px solid #1e293b', flexShrink: 0
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{
+                width: 32, height: 32, borderRadius: 8,
+                background: 'linear-gradient(135deg,#3b82f6,#06b6d4)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center'
+              }}>
+                <Map color="white" size={16} />
+              </div>
+              <div>
+                <div style={{ color: 'white', fontSize: 14, fontWeight: 700 }}>India Fault Map</div>
+                <div style={{ color: '#475569', fontSize: 11 }}>Interactive — hover faults to view details</div>
+              </div>
+            </div>
+
+            {/* Legend */}
+            <div style={{
+              marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 16,
+              background: '#1e293b', borderRadius: 10, padding: '7px 16px'
+            }}>
+              {[
+                { color: '#ef4444', label: 'Neotectonic' },
+                { color: '#f97316', label: 'Cover' },
+                { color: '#3b82f6', label: 'Basement & Cover' },
+                { color: '#6b7280', label: 'Sub-surface' },
+              ].map(({ color, label }) => (
+                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <div style={{ width: 20, height: 3, background: color, borderRadius: 2 }} />
+                  <span style={{ fontSize: 11, color: '#94a3b8', whiteSpace: 'nowrap' }}>{label}</span>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setMapOpen(false)}
+              style={{
+                background: '#1e293b', border: 'none', borderRadius: 8,
+                color: '#94a3b8', padding: '7px 14px', cursor: 'pointer',
+                fontSize: 13, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6
+              }}
+            >
+              <X size={14} /> Close
+            </button>
+          </div>
+
+          {/* Map iframe inside modal */}
+          <iframe
+            src={MAP_URL}
+            title="India Fault Map"
+            style={{ flex: 1, border: 'none', display: 'block', width: '100%' }}
+          />
+        </div>
+      )}
     </div>
   );
 }
@@ -645,34 +591,34 @@ function ReportView({ data, onReset }) {
 // ─── Panel router ─────────────────────────────────────────────────────────────
 function PanelContent({ section, data }) {
   switch (section) {
-    case 'overview': return <OverviewPanel data={data} />;
-    case 'gr_curve': return <GraphPanel title="Gutenberg–Richter relation" b64={data.graph} subtitle="log₁₀(N) vs Magnitude" />;
+    case 'overview':     return <OverviewPanel data={data} />;
+    case 'gr_curve':     return <GraphPanel title="Gutenberg–Richter relation" b64={data.graph} subtitle="log₁₀(N) vs Magnitude" />;
     case 'hazard_curve': return <GraphPanel title="Seismic hazard curve" b64={data.hazard_curve} subtitle="Mean annual rate of exceedance vs PGA (g)" />;
-    case 'compiled': return <TablePanel title="Compiled catalog" subtitle="All events after deduplication" rows={data.compiled_preview} />;
-    case 'filtered': return <TablePanel title="Filtered catalog" subtitle="Events within fault buffer zone" rows={data.filtered_preview} />;
-    case 'declustered': return <TablePanel title="Declustered catalog" subtitle="Mainshocks only after Gardner–Knopoff declustering" rows={data.declustered_preview} />;
-    case 'yearly_mag': return <TablePanel title="Yearly magnitude counts" subtitle="Number of events per year per magnitude band" rows={data.yearly_mag} />;
-    case 'cumulative': return <TablePanel title="Cumulative counts" subtitle="Cumulative G–R table" rows={data.cumulative} />;
-    case 'ab_table': return <TablePanel title="A–B PSHA table" subtitle="logN vs magnitude — Gutenberg–Richter regression inputs" rows={data.ab_table} />;
+    case 'compiled':     return <TablePanel title="Compiled catalog" subtitle="All events after deduplication" rows={data.compiled_preview} />;
+    case 'filtered':     return <TablePanel title="Filtered catalog" subtitle="Events within fault buffer zone" rows={data.filtered_preview} />;
+    case 'declustered':  return <TablePanel title="Declustered catalog" subtitle="Mainshocks only after Gardner–Knopoff declustering" rows={data.declustered_preview} />;
+    case 'yearly_mag':   return <TablePanel title="Yearly magnitude counts" subtitle="Number of events per year per magnitude band" rows={data.yearly_mag} />;
+    case 'cumulative':   return <TablePanel title="Cumulative counts" subtitle="Cumulative G–R table" rows={data.cumulative} />;
+    case 'ab_table':     return <TablePanel title="A–B PSHA table" subtitle="logN vs magnitude — Gutenberg–Richter regression inputs" rows={data.ab_table} />;
     case 'completeness': return <TablePanel title="Completeness analysis" subtitle="Stepp method — λ and σ per period per magnitude band" rows={data.completeness} />;
-    case 'faults': return <TablePanel title="Fault metrics" subtitle="Fault lengths, earthquake counts, weights, and revised α" rows={data.fault_metrics} />;
+    case 'faults':       return <TablePanel title="Fault metrics" subtitle="Fault lengths, earthquake counts, weights, and revised α" rows={data.fault_metrics} />;
     case 'psha_summary': return <TablePanel title="PSHA summary" subtitle="Total µ(z) and return period for each PGA value" rows={data.psha_summary} />;
-    case 'mare': return <MarePanel data={data} />;
-    default: return null;
+    case 'mare':         return <MarePanel data={data} />;
+    default:             return null;
   }
 }
 
 // ─── Overview ─────────────────────────────────────────────────────────────────
 function OverviewPanel({ data }) {
   const stats = [
-    { label: 'a-value', value: typeof data.a_value === 'number' ? data.a_value.toFixed(4) : data.a_value },
-    { label: 'b-value', value: typeof data.b_value === 'number' ? data.b_value.toFixed(4) : data.b_value },
-    { label: 'R²', value: typeof data.r2 === 'number' ? data.r2.toFixed(4) : data.r2 },
-    { label: 'Total events', value: data.number_of_earthquakes },
-    { label: 'After dedup', value: data.dedup_count ?? '—' },
-    { label: 'After filter', value: data.filtered_count ?? '—' },
+    { label: 'a-value',         value: typeof data.a_value === 'number' ? data.a_value.toFixed(4) : data.a_value },
+    { label: 'b-value',         value: typeof data.b_value === 'number' ? data.b_value.toFixed(4) : data.b_value },
+    { label: 'R²',              value: typeof data.r2 === 'number' ? data.r2.toFixed(4) : data.r2 },
+    { label: 'Total events',    value: data.number_of_earthquakes },
+    { label: 'After dedup',     value: data.dedup_count ?? '—' },
+    { label: 'After filter',    value: data.filtered_count ?? '—' },
     { label: 'After decluster', value: data.declustered_count ?? '—' },
-    { label: 'Faults found', value: data.fault_count ?? '—' },
+    { label: 'Faults found',    value: data.fault_count ?? '—' },
   ];
 
   return (
@@ -713,12 +659,8 @@ function GraphPanel({ title, subtitle, b64 }) {
 // ─── Generic table panel ──────────────────────────────────────────────────────
 function TablePanel({ title, subtitle, rows }) {
   if (!rows || rows.length === 0) return (
-    <div>
-      <PageHeader title={title} sub={subtitle} />
-      <EmptyState />
-    </div>
+    <div><PageHeader title={title} sub={subtitle} /><EmptyState /></div>
   );
-
   const cols = Object.keys(rows[0]);
   return (
     <div>
@@ -766,7 +708,7 @@ function TablePanel({ title, subtitle, rows }) {
   );
 }
 
-// ─── MARE panel (special layout) ─────────────────────────────────────────────
+// ─── MARE panel ───────────────────────────────────────────────────────────────
 function MarePanel({ data }) {
   const rows = data.mare ?? [];
   return (
@@ -784,7 +726,8 @@ function MarePanel({ data }) {
                 <div style={{ fontSize: 11, color: '#94a3b8', marginBottom: 2 }}>MARE</div>
                 <div style={{ fontSize: 14, fontWeight: 600, color: '#1e293b', fontFamily: 'monospace' }}>
                   {typeof r['Mean Annual Rate of Exceedance'] === 'number'
-                    ? r['Mean Annual Rate of Exceedance'].toExponential(4) : r['Mean Annual Rate of Exceedance']}
+                    ? r['Mean Annual Rate of Exceedance'].toExponential(4)
+                    : r['Mean Annual Rate of Exceedance']}
                 </div>
               </div>
               <div style={{
@@ -804,7 +747,7 @@ function MarePanel({ data }) {
   );
 }
 
-// ─── Shared components ────────────────────────────────────────────────────────
+// ─── Shared ───────────────────────────────────────────────────────────────────
 function PageHeader({ title, sub }) {
   return (
     <div style={{ marginBottom: 24 }}>
@@ -816,16 +759,11 @@ function PageHeader({ title, sub }) {
 
 function StatCard({ label, value }) {
   return (
-    <div style={{
-      background: 'white', borderRadius: 12, padding: '16px 18px',
-      border: '0.5px solid #e2e8f0'
-    }}>
+    <div style={{ background: 'white', borderRadius: 12, padding: '16px 18px', border: '0.5px solid #e2e8f0' }}>
       <div style={{ fontSize: 11, color: '#64748b', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 6 }}>
         {label}
       </div>
-      <div style={{ fontSize: 22, fontWeight: 700, color: '#1e40af' }}>
-        {value ?? '—'}
-      </div>
+      <div style={{ fontSize: 22, fontWeight: 700, color: '#1e40af' }}>{value ?? '—'}</div>
     </div>
   );
 }
