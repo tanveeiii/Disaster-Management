@@ -5,7 +5,7 @@ import { Activity, MapPin, Download, Table, BarChart3 } from 'lucide-react';
 const App = () => {
   const [loading, setLoading] = useState(false);
   const [report, setReport] = useState(null);
-  const [formData, setFormData] = useState({ lat: '21.8', lon: '75.6' });
+  const [formData, setFormData] = useState({ lat: '22.4155', lon: '75.7561' });
 
   const API_URL = "http://127.0.0.1:5000/analyze";
 

@@ -320,9 +320,9 @@ def compute_completeness_analysis(
     df_filtered_final: pd.DataFrame,
     end_year: int = 2020,
     mag_bins=None
-) -> pd.DataFrame:
+):
     """
-    Returns the same completeness table as in the notebook.
+    Returns the completeness table and a log-log scatter plot of the completeness analysis.
     """
     if mag_bins is None:
         mag_bins = [
@@ -373,7 +373,54 @@ def compute_completeness_analysis(
 
         rows.append(row)
 
-    return pd.DataFrame(rows)
+    df_out = pd.DataFrame(rows)
+
+    # --- Generate the Completeness Graph ---
+    fig, ax = plt.subplots(figsize=(10, 8))
+
+    # Plot 1/Ts reference line (Matches the Diamond marker in your Excel)
+    ax.scatter(df_out["Ts (Yr)"], df_out["(1/Ts)^1/2"], label="1/Ts", marker="D")
+
+    # Distinct markers to match Excel's multiple series styles
+    markers = ['^', 'x', '*', 'o', '+', 's', 'v']
+
+    # Plot the standard deviation (σs) for magnitude bins
+    for i, (mmin, mmax) in enumerate(mag_bins):
+        # The Excel chart skips the first bin (3.5-3.9), so we skip index 0 here
+        if i == 0:
+            continue
+            
+        label = f"{mmin}-{mmax}" if mmax < 10 else ">6"
+        col_name = f"{label} σs"
+
+        # Filter out 0.0 values to prevent missing dots/warnings on the log scale
+        mask = df_out[col_name] > 0
+        
+        if mask.any():
+            ax.scatter(
+                df_out.loc[mask, "Ts (Yr)"],
+                df_out.loc[mask, col_name],
+                label=label,
+                marker=markers[i % len(markers)],
+                s=30 # Adjust marker size
+            )
+
+    # Set Log-Log Scale
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+
+    # Format the chart to mirror the image
+    ax.set_xlabel("Time (Years)")
+    ax.set_ylabel("σs")
+    ax.set_title("Completeness Analysis")
+    
+    # Place legend neatly inside the chart area
+    ax.legend(loc="upper center", ncol=3, frameon=False)
+    
+    # Optional: Adds grid lines for easier log-scale reading
+    ax.grid(True, which="both", ls="--", alpha=0.3)
+
+    return df_out, fig
 
 
 # ---------------------------------------------------------------------
@@ -775,7 +822,7 @@ def run_full_analysis(
 
     # 4. G-R analysis and completeness
     ab_results      = compute_ab_psha(df_filtered_final, start_year=start_year)
-    completeness_df = compute_completeness_analysis(df_filtered_final, end_year=start_year)
+    completeness_df, completeness_fig = compute_completeness_analysis(df_filtered_final, end_year=start_year)
 
     # 5. Fault metrics
     gdf_eq_local = gpd.GeoDataFrame(
@@ -803,6 +850,7 @@ def run_full_analysis(
         "r2":                ab_results["r2"],
         "figure":            ab_results["figure"],
         "completeness_df":   completeness_df,
+        "completeness_fig": completeness_fig
     }
 
     # 6. Full PSHA — all faults × all z values (0.01 → 0.36)
