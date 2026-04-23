@@ -130,6 +130,7 @@ def analyze():
         cum_df        = result.get("cum_df")
         ab_df         = result.get("ab_df")
         completeness  = result.get("completeness_df")
+        completeness_fig = result.get("completeness_figure")
 
         fault_metrics = result.get("gdf_faults")
         psha_summary  = result.get("psha_summary_df")
@@ -166,8 +167,7 @@ def analyze():
 
             # ─── Graphs ────────────────────────────────
             "graph": fig_to_base64(result.get("figure")),
-            "hazard_curve": fig_to_base64(result.get("psha_figure")),
-
+            "hazard_curve": fig_to_base64(result.get("psha_figure")),            "completeness_graph": fig_to_base64(completeness_fig),
             # ─── Download ──────────────────────────────
             "download_excel": "http://127.0.0.1:5000/download-excel"
         })

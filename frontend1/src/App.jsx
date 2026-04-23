@@ -13,25 +13,25 @@ const MAP_URL = "http://127.0.0.1:5000/map";
 
 // ─── Sidebar nav items — each maps to a key in the response ──────────────────
 const NAV_SECTIONS = [
-  { key: "overview",     label: "Overview",          icon: BarChart3,    desc: "Key stats & GR curve" },
-  { key: "gr_curve",     label: "GR Curve",          icon: TrendingDown, desc: "Gutenberg–Richter plot" },
-  { key: "compiled",     label: "Compiled catalog",  icon: Table2,       desc: "Raw deduplicated events" },
-  { key: "filtered",     label: "Filtered catalog",  icon: Layers,       desc: "Events after fault filter" },
-  { key: "declustered",  label: "Declustered",       icon: GitBranch,    desc: "Mainshocks only" },
-  { key: "yearly_mag",   label: "Yearly magnitude",  icon: Table2,       desc: "Event count per year/band" },
-  { key: "cumulative",   label: "Cumulative counts", icon: Table2,       desc: "Cumulative G-R table" },
-  { key: "ab_table",     label: "A-B PSHA table",    icon: Table2,       desc: "logN vs magnitude" },
-  { key: "completeness", label: "Completeness",      icon: Table2,       desc: "Stepp completeness table" },
-  { key: "faults",       label: "Fault metrics",     icon: GitBranch,    desc: "Fault lengths, weights, α" },
-  { key: "psha_summary", label: "PSHA summary",      icon: Zap,          desc: "µ(z) vs PGA table" },
-  { key: "mare",         label: "MARE table",        icon: Zap,          desc: "Return period PGA values" },
-  { key: "hazard_curve", label: "Hazard curve",      icon: TrendingDown, desc: "PGA exceedance curve" },
+  { key: "overview", label: "Overview", icon: BarChart3, desc: "Key stats & GR curve" },
+  { key: "gr_curve", label: "GR Curve", icon: TrendingDown, desc: "Gutenberg–Richter plot" },
+  { key: "compiled", label: "Compiled catalog", icon: Table2, desc: "Raw deduplicated events" },
+  { key: "filtered", label: "Filtered catalog", icon: Layers, desc: "Events after fault filter" },
+  { key: "declustered", label: "Declustered", icon: GitBranch, desc: "Mainshocks only" },
+  { key: "yearly_mag", label: "Yearly magnitude", icon: Table2, desc: "Event count per year/band" },
+  { key: "cumulative", label: "Cumulative counts", icon: Table2, desc: "Cumulative G-R table" },
+  { key: "ab_table", label: "A-B PSHA table", icon: Table2, desc: "logN vs magnitude" },
+  { key: "completeness", label: "Completeness", icon: Table2, desc: "Stepp completeness table" },
+  { key: "faults", label: "Fault metrics", icon: GitBranch, desc: "Fault lengths, weights, α" },
+  { key: "psha_summary", label: "PSHA summary", icon: Zap, desc: "µ(z) vs PGA table" },
+  { key: "mare", label: "MARE table", icon: Zap, desc: "Return period PGA values" },
+  { key: "hazard_curve", label: "Hazard curve", icon: TrendingDown, desc: "PGA exceedance curve" },
 ];
 
 // ─── Root ─────────────────────────────────────────────────────────────────────
 export default function App() {
   // "home" | "map" | "report"
-  const [view, setView]     = useState('home');
+  const [view, setView] = useState('home');
   const [report, setReport] = useState(null);
 
   if (view === 'map') {
@@ -66,7 +66,7 @@ export default function App() {
 // ─── India Fault Map full-screen view ────────────────────────────────────────
 function FaultMapView({ onBack }) {
   const [loading, setLoading] = useState(true);
-  const [error,   setError]   = useState(false);
+  const [error, setError] = useState(false);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', background: '#0f172a' }}>
@@ -186,8 +186,8 @@ function FaultMapView({ onBack }) {
 
 // ─── Input form ───────────────────────────────────────────────────────────────
 function InputView({ onSuccess, onShowMap }) {
-  const [loading,  setLoading]  = useState(false);
-  const [file,     setFile]     = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null);
   const [dragOver, setDragOver] = useState(false);
   const [form, setForm] = useState({
     lat: '', lon: '', radius: '300', decluster: '50', buffer: '15',
@@ -218,14 +218,14 @@ function InputView({ onSuccess, onShowMap }) {
     setLoading(true);
     const fd = new FormData();
     fd.append('file', file);
-    fd.append('latitude',    parseFloat(form.lat));
-    fd.append('longitude',   parseFloat(form.lon));
-    fd.append('radius',      parseFloat(form.radius));
+    fd.append('latitude', parseFloat(form.lat));
+    fd.append('longitude', parseFloat(form.lon));
+    fd.append('radius', parseFloat(form.radius));
     fd.append('decluster_km', parseFloat(form.decluster));
-    fd.append('buffer_km',   parseFloat(form.buffer));
-    fd.append('x_coord',     parseFloat(form.x_coord || form.lat));
-    fd.append('y_coord',     parseFloat(form.y_coord || form.lon));
-    fd.append('start_year',  parseInt(form.start_year));
+    fd.append('buffer_km', parseFloat(form.buffer));
+    fd.append('x_coord', parseFloat(form.x_coord || form.lat));
+    fd.append('y_coord', parseFloat(form.y_coord || form.lon));
+    fd.append('start_year', parseInt(form.start_year));
 
     let loadingToastId = null;
     try {
@@ -240,14 +240,14 @@ function InputView({ onSuccess, onShowMap }) {
         toast.success('✅ Analysis completed successfully!', { autoClose: 3000 });
         onSuccess(res.data);
       } else {
-        const errorMsg  = res.data.message  || 'Unknown error occurred';
-        const errorType = res.data.type     || 'error';
+        const errorMsg = res.data.message || 'Unknown error occurred';
+        const errorType = res.data.type || 'error';
         const icons = { column_error: '📋', file_error: '📁', parameter_error: '⚙️', data_error: '📊', analysis_error: '❌' };
         toast.error(errorMsg, { icon: icons[errorType] || '⚠️', autoClose: 5000, position: 'top-center' });
       }
     } catch (error) {
       toast.dismiss(loadingToastId);
-      let msg  = 'Could not connect to Flask server. Make sure it is running on port 5000.';
+      let msg = 'Could not connect to Flask server. Make sure it is running on port 5000.';
       let icon = '🔌';
       if (error.response?.status === 400) { msg = error.response.data.message || 'Bad request'; icon = '⚠️'; }
       else if (error.response?.status === 500) { msg = error.response.data.message || 'Server error'; icon = '❌'; }
@@ -367,21 +367,21 @@ function InputView({ onSuccess, onShowMap }) {
             <Divider icon={<MapPin size={14} />} label="Site coordinates" />
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
-              {F('lat', 'Center latitude',  { required: true, placeholder: 'e.g. 22.62' })}
+              {F('lat', 'Center latitude', { required: true, placeholder: 'e.g. 22.62' })}
               {F('lon', 'Center longitude', { required: true, placeholder: 'e.g. 75.69' })}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 20 }}>
-              {F('radius',   'Radius (km)',      { placeholder: '300' })}
-              {F('decluster','Decluster (km)',   { placeholder: '50' })}
-              {F('buffer',   'Fault buffer (km)',{ placeholder: '15' })}
+              {F('radius', 'Radius (km)', { placeholder: '300' })}
+              {F('decluster', 'Decluster (km)', { placeholder: '50' })}
+              {F('buffer', 'Fault buffer (km)', { placeholder: '15' })}
             </div>
 
             <Divider icon={<Zap size={14} />} label="PSHA site point (x_coord / y_coord)" />
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 28 }}>
-              {F('x_coord',    'Site latitude',  { required: false, placeholder: 'defaults to center lat', hint: 'Leave blank to use center lat' })}
-              {F('y_coord',    'Site longitude', { required: false, placeholder: 'defaults to center lon', hint: 'Leave blank to use center lon' })}
-              {F('start_year', 'End year',       { placeholder: '2020', hint: 'Year analysis ends at' })}
+              {F('x_coord', 'Site latitude', { required: false, placeholder: 'defaults to center lat', hint: 'Leave blank to use center lat' })}
+              {F('y_coord', 'Site longitude', { required: false, placeholder: 'defaults to center lon', hint: 'Leave blank to use center lon' })}
+              {F('start_year', 'End year', { placeholder: '2020', hint: 'Year analysis ends at' })}
             </div>
 
             <button
@@ -591,34 +591,34 @@ function ReportView({ data, onReset }) {
 // ─── Panel router ─────────────────────────────────────────────────────────────
 function PanelContent({ section, data }) {
   switch (section) {
-    case 'overview':     return <OverviewPanel data={data} />;
-    case 'gr_curve':     return <GraphPanel title="Gutenberg–Richter relation" b64={data.graph} subtitle="log₁₀(N) vs Magnitude" />;
+    case 'overview': return <OverviewPanel data={data} />;
+    case 'gr_curve': return <GraphPanel title="Gutenberg–Richter relation" b64={data.graph} subtitle="log₁₀(N) vs Magnitude" />;
     case 'hazard_curve': return <GraphPanel title="Seismic hazard curve" b64={data.hazard_curve} subtitle="Mean annual rate of exceedance vs PGA (g)" />;
-    case 'compiled':     return <TablePanel title="Compiled catalog" subtitle="All events after deduplication" rows={data.compiled_preview} />;
-    case 'filtered':     return <TablePanel title="Filtered catalog" subtitle="Events within fault buffer zone" rows={data.filtered_preview} />;
-    case 'declustered':  return <TablePanel title="Declustered catalog" subtitle="Mainshocks only after Gardner–Knopoff declustering" rows={data.declustered_preview} />;
-    case 'yearly_mag':   return <TablePanel title="Yearly magnitude counts" subtitle="Number of events per year per magnitude band" rows={data.yearly_mag} />;
-    case 'cumulative':   return <TablePanel title="Cumulative counts" subtitle="Cumulative G–R table" rows={data.cumulative} />;
-    case 'ab_table':     return <TablePanel title="A–B PSHA table" subtitle="logN vs magnitude — Gutenberg–Richter regression inputs" rows={data.ab_table} />;
-    case 'completeness': return <TablePanel title="Completeness analysis" subtitle="Stepp method — λ and σ per period per magnitude band" rows={data.completeness} />;
-    case 'faults':       return <TablePanel title="Fault metrics" subtitle="Fault lengths, earthquake counts, weights, and revised α" rows={data.fault_metrics} />;
+    case 'compiled': return <TablePanel title="Compiled catalog" subtitle="All events after deduplication" rows={data.compiled_preview} />;
+    case 'filtered': return <TablePanel title="Filtered catalog" subtitle="Events within fault buffer zone" rows={data.filtered_preview} />;
+    case 'declustered': return <TablePanel title="Declustered catalog" subtitle="Mainshocks only after Gardner–Knopoff declustering" rows={data.declustered_preview} />;
+    case 'yearly_mag': return <TablePanel title="Yearly magnitude counts" subtitle="Number of events per year per magnitude band" rows={data.yearly_mag} />;
+    case 'cumulative': return <TablePanel title="Cumulative counts" subtitle="Cumulative G–R table" rows={data.cumulative} />;
+    case 'ab_table': return <TablePanel title="A–B PSHA table" subtitle="logN vs magnitude — Gutenberg–Richter regression inputs" rows={data.ab_table} />;
+    case 'completeness': return <CompletenessPanel data={data} />;
+    case 'faults': return <TablePanel title="Fault metrics" subtitle="Fault lengths, earthquake counts, weights, and revised α" rows={data.fault_metrics} />;
     case 'psha_summary': return <TablePanel title="PSHA summary" subtitle="Total µ(z) and return period for each PGA value" rows={data.psha_summary} />;
-    case 'mare':         return <MarePanel data={data} />;
-    default:             return null;
+    case 'mare': return <MarePanel data={data} />;
+    default: return null;
   }
 }
 
 // ─── Overview ─────────────────────────────────────────────────────────────────
 function OverviewPanel({ data }) {
   const stats = [
-    { label: 'a-value',         value: typeof data.a_value === 'number' ? data.a_value.toFixed(4) : data.a_value },
-    { label: 'b-value',         value: typeof data.b_value === 'number' ? data.b_value.toFixed(4) : data.b_value },
-    { label: 'R²',              value: typeof data.r2 === 'number' ? data.r2.toFixed(4) : data.r2 },
-    { label: 'Total events',    value: data.number_of_earthquakes },
-    { label: 'After dedup',     value: data.dedup_count ?? '—' },
-    { label: 'After filter',    value: data.filtered_count ?? '—' },
+    { label: 'a-value', value: typeof data.a_value === 'number' ? data.a_value.toFixed(4) : data.a_value },
+    { label: 'b-value', value: typeof data.b_value === 'number' ? data.b_value.toFixed(4) : data.b_value },
+    { label: 'R²', value: typeof data.r2 === 'number' ? data.r2.toFixed(4) : data.r2 },
+    { label: 'Total events', value: data.number_of_earthquakes },
+    { label: 'After dedup', value: data.dedup_count ?? '—' },
+    { label: 'After filter', value: data.filtered_count ?? '—' },
     { label: 'After decluster', value: data.declustered_count ?? '—' },
-    { label: 'Faults found',    value: data.fault_count ?? '—' },
+    { label: 'Faults found', value: data.fault_count ?? '—' },
   ];
 
   return (
@@ -704,6 +704,30 @@ function TablePanel({ title, subtitle, rows }) {
           {rows.length} rows
         </div>
       </div>
+    </div>
+  );
+}
+
+// ─── Completeness panel ─────────────────────────────────────────────────────
+function CompletenessPanel({ data }) {
+  const rows = data.completeness ?? [];
+  return (
+    <div>
+      <PageHeader title="Completeness analysis" sub="Stepp method — λ and σ per period per magnitude band" />
+      {data.completeness_graph ? (
+        <div style={{ background: 'white', borderRadius: 16, padding: 24, border: '0.5px solid #e2e8f0', marginBottom: 24 }}>
+          <h3 style={{ margin: '0 0 16px', fontSize: 15, fontWeight: 600, color: '#0f172a' }}>
+            Completeness plot
+          </h3>
+          <img src={`data:image/png;base64,${data.completeness_graph}`} alt="Completeness analysis" style={{ maxWidth: '100%', borderRadius: 10 }} />
+        </div>
+      ) : (
+        <div style={{ marginBottom: 24, padding: 20, borderRadius: 16, background: 'white', border: '0.5px solid #e2e8f0', color: '#64748b', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <AlertTriangle size={20} />
+          No completeness chart returned from the server.
+        </div>
+      )}
+      <TablePanel title="Completeness table" subtitle="Stepp method — λ and σ per period per magnitude band" rows={rows} />
     </div>
   );
 }

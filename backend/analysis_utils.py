@@ -385,6 +385,38 @@ def compute_completeness_analysis(
     return pd.DataFrame(rows)
 
 
+def plot_completeness_analysis(df_completeness: pd.DataFrame):
+    """
+    Creates a completeness analysis chart from the completeness results.
+    """
+    if df_completeness is None or df_completeness.empty:
+        return None
+
+    # Use the start year as the x-axis and plot mean annual rate (λ) per magnitude band.
+    df_plot = df_completeness.copy()
+    lambda_cols = [c for c in df_plot.columns if str(c).endswith(' λ')]
+    if not lambda_cols:
+        return None
+
+    # Reverse so the figure reads from older periods on the left to newer periods on the right.
+    x = df_plot['Period'].astype(int)
+    y_index = list(range(len(x) - 1, -1, -1))
+    x_rev = x.iloc[y_index]
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    for col in lambda_cols:
+        y = pd.to_numeric(df_plot[col], errors='coerce').iloc[y_index]
+        ax.plot(x_rev, y, marker='o', label=col.replace(' λ', ''))
+
+    ax.set_xlabel('Start Year')
+    ax.set_ylabel('λ (mean annual rate)')
+    ax.set_title('Completeness analysis — λ by magnitude band')
+    ax.legend(title='Magnitude band', fontsize=9, title_fontsize=10, loc='best')
+    ax.grid(True, linestyle='--', alpha=0.35)
+    fig.tight_layout()
+    return fig
+
+
 # ---------------------------------------------------------------------
 # Fault processing
 # ---------------------------------------------------------------------
@@ -785,6 +817,7 @@ def run_full_analysis(
     # 4. G-R analysis and completeness
     ab_results      = compute_ab_psha(df_filtered_final, start_year=start_year)
     completeness_df = compute_completeness_analysis(df_filtered_final, end_year=start_year)
+    completeness_fig = plot_completeness_analysis(completeness_df)
 
     # 5. Fault metrics
     gdf_eq_local = gpd.GeoDataFrame(
@@ -812,6 +845,7 @@ def run_full_analysis(
         "r2":                ab_results["r2"],
         "figure":            ab_results["figure"],
         "completeness_df":   completeness_df,
+        "completeness_figure": completeness_fig,
     }
 
     # 6. Full PSHA — all faults × all z values (0.01 → 0.36)
